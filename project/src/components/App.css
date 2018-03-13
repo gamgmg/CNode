@@ -1,0 +1,49 @@
+@import '../assets/sass/common.css';
+
+
+.app {
+  width: 100%;
+  height: 100%;
+  background-color: #e1e1e1;
+  & .app-header {
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    height: 86px;
+    text-align: center;
+    background-color: #444;
+    & img{
+      width: 120px;
+      padding: 3px 20px;
+      height: 34px;
+      line-height: 34px;
+    }
+  }
+  & .app-search {
+    & .am-search {
+      background-color: #444;
+    }
+  }
+  & .am-tabs-content-wrap {
+    top: 86px;
+    margin-top: 20px;
+  }
+  & .am-segment {
+    border-radius: 5px 5px 0 0;
+    background-color: #f6f6f6;
+  }
+  & .am-segment-item {
+    color: var(--baseLightColor);
+    border: none;
+    &:first-child {
+      border-radius: 0;
+    }
+    &:last-child {
+      border-radius: 0;
+    }
+  }
+  & .am-segment-item-selected {
+    background-color: var(--baseLightColor);
+    color: var(--baseLightColor);
+  }
+}
