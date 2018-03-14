@@ -4,7 +4,7 @@ import Home from './home/Home'
 import Search from './search/Search'
 import logo from '../assets/img/cnodejs_light.svg'
 import 'antd-mobile/dist/antd-mobile.css'
-import '../assets/sass/reset.css'
+import '../assets/css/reset.css'
 import './App.css';
 
 class App extends Component {
