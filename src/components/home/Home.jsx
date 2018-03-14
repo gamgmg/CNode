@@ -5,7 +5,8 @@ import Page from '../page/Page'
 import './Home.css'
 
 import axios from 'axios'
-import getPath from '../../config/api'
+import getPath from '@/config/api'
+import getDateDiff from '@/utils/timestamp'
 
 const Item = List.Item
 const Brief = Item.Brief
@@ -20,7 +21,7 @@ class Home extends Component {
 	componentDidMount(){
 		axios.get(getPath('GET_TOPICS'),{
 			params: {
-				page: 1,
+				page: 50,
 				limit: 20
 			}
 		})
@@ -50,7 +51,7 @@ class Home extends Component {
 								return (
 									<Item 
 										key={list.id}
-										extra="10:30" 
+										extra={getDateDiff(new Date(list.last_reply_at))} 
 										align="top" 
 										thumb={list.author.avatar_url}
 										multipleLine

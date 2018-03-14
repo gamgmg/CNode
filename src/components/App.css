@@ -1,6 +1,5 @@
 @import '../assets/sass/common.css';
 
-
 .app {
   width: 100%;
   height: 100%;
@@ -26,7 +25,8 @@
   }
   & .am-tabs-content-wrap {
     top: 86px;
-    margin-top: 20px;
+    bottom: 50px;
+    margin: 20px 0 90px;
   }
   & .am-segment {
     border-radius: 5px 5px 0 0;
