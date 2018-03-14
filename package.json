@@ -16,13 +16,11 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "node-sass": "^4.7.2",
     "postcss-cssnext": "^3.1.0",
     "postcss-import": "^11.1.0",
     "postcss-mixins": "^6.2.0",
     "postcss-nested": "^3.0.0",
     "proxyquire": "^2.0.0",
-    "rewire": "^3.0.2",
-    "sass-loader": "^6.0.7"
+    "rewire": "^3.0.2"
   }
 }
