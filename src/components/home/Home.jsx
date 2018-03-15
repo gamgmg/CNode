@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { Route } from 'react-router-dom'
 import { PullToRefresh, SegmentedControl, WingBlank, List } from 'antd-mobile'
 import axios from 'axios'
 import getPath from '@/config/api'
 import getDateDiff from '@/utils/timestamp'
+import Detail from '../detail/Detail'
 import './Home.css'
 const Item = List.Item
 const Brief = Item.Brief
@@ -73,7 +75,16 @@ class Home extends Component {
 		}
 		return top ? '置顶' : tabsList[tab];
 	}
+	toDetail(url){
+		return ()=>{
+			this.props.history.push({
+				pathname: url
+			})
+		}
+	}
 	render() {
+		let { match } = this.props;
+		console.log(match)
 		return (
 			<WingBlank size="sm" className="home">					
 				<div className="home-segment">
@@ -98,6 +109,7 @@ class Home extends Component {
 										align="middle" 
 										thumb={list.author.avatar_url}
 										multipleLine
+										onClick={this.toDetail(`${match.url + '/' + list.id}`)}
 									>
 								  		<span className="tab">{this.getTab(list.tab, list.top)}</span>{list.title}<Brief>{`${list.reply_count}/${list.visit_count}`}</Brief>
 									</Item>
@@ -107,6 +119,7 @@ class Home extends Component {
 						</PullToRefresh>
 					</List>
 				</div>
+				<Route path={`${match.url + '/:id'}`} component={Detail} />
 			</WingBlank>
 		)
 	}

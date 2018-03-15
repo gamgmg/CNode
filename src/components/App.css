@@ -5,12 +5,20 @@
   height: 100%;
   background-color: #e1e1e1;
   & .app-header {
-    position: absolute;
+    position: fixed;
     left: 0%;
     right: 0%;
     height: 86px;
     text-align: center;
+    z-index: 99;
     background-color: #444;
+    & .app-header_list {
+      display: flex;
+      height: 44px;
+      color: #fff;
+      align-items: center;
+      justify-content: space-around;
+    }
     & img{
       width: 120px;
       padding: 3px 20px;
@@ -18,10 +26,11 @@
       line-height: 34px;
     }
   }
-  & .app-search {
-    & .am-search {
-      background-color: #444;
-    }
+  & .app-content {
+    position: relative;
+    top: 96px;
+    height: calc(100% - 96px);
+    overflow-y: scroll;
   }
   & .am-tabs-content-wrap {
     top: 86px;
