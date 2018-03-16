@@ -45,15 +45,12 @@ class Home extends Component {
 	segmentChange(e){
 		switch(e.nativeEvent.selectedSegmentIndex){
 			case 1:
-				this.setState({tab: 'good'});
-				break;
-			case 2:
 				this.setState({tab: 'share'});
 				break;
-			case 3:
+			case 2:
 				this.setState({tab: 'ask'});
 				break;
-			case 4:
+			case 3:
 				this.setState({tab: 'job'});
 				break;
 			default:
@@ -71,7 +68,6 @@ class Home extends Component {
 			ask: '问答',
 			share: '分享',
 			job: '招聘',
-			good: '精华',
 		}
 		return top ? '置顶' : tabsList[tab];
 	}
@@ -88,7 +84,7 @@ class Home extends Component {
 		return (
 			<WingBlank size="sm" className="home">					
 				<div className="home-segment">
-					<SegmentedControl selectedIndex={this.state.selectedIndex} values={['全部', '精华', '分享', '问答', '招聘']} onChange={this.segmentChange.bind(this)}/>
+					<SegmentedControl selectedIndex={this.state.selectedIndex} values={['全部', '分享', '问答', '招聘']} onChange={this.segmentChange.bind(this)}/>
 				</div>
 				<div className="home-content">
 					<List className="my-list">
