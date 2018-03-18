@@ -2,7 +2,7 @@
 
 .home-content {
 	background-color: #fff;
-	.tab {
+	.hc-label {
 		display: inline-block;
 	    padding: 0px 4px;
 	    background-color: var(--baseLightColor);

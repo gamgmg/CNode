@@ -24,7 +24,7 @@ class Home extends Component {
 		this.getData();
 	}
 	getData(){
-		axios.get(getPath('GET_TOPICS'),{
+		axios.get(getPath('topics'),{
 			params: {
 				page: this.state.page,
 				limit: 20,
@@ -34,7 +34,7 @@ class Home extends Component {
 		.then(({data})=>{
 			if(data.success){
 				topicsList = topicsList.concat(data.data);
-				console.log(topicsList)
+				// console.log(topicsList)
 				this.setState({topicsList})
 			}
 		})
@@ -42,6 +42,7 @@ class Home extends Component {
 			console.log(err)
 		})
 	}
+	// 切换类型
 	segmentChange(e){
 		switch(e.nativeEvent.selectedSegmentIndex){
 			case 1:
@@ -58,9 +59,12 @@ class Home extends Component {
 				break;
 		}
 		topicsList = [];
-		setTimeout(()=>{this.getData()},10);
+		// setTimeout(()=>{this.getData()},10);
 		this.setState({
-			selectedIndex: e.nativeEvent.selectedSegmentIndex
+			selectedIndex: e.nativeEvent.selectedSegmentIndex,
+			page: 1
+		}, ()=>{
+			this.getData();
 		})
 	}
 	getTab(tab, top){
@@ -71,6 +75,7 @@ class Home extends Component {
 		}
 		return top ? '置顶' : tabsList[tab];
 	}
+	// 跳转到详情页
 	toDetail(url){
 		return ()=>{
 			this.props.history.push({
@@ -80,7 +85,7 @@ class Home extends Component {
 	}
 	render() {
 		let { match } = this.props;
-		console.log(match)
+		// console.log(match)
 		return (
 			<WingBlank size="sm" className="home">					
 				<div className="home-segment">
@@ -101,13 +106,13 @@ class Home extends Component {
 								return (
 									<Item 
 										key={list.id}
-										extra={getDateDiff(new Date(list.last_reply_at))} 
+										extra={getDateDiff(list.last_reply_at)} 
 										align="middle" 
 										thumb={list.author.avatar_url}
 										multipleLine
 										onClick={this.toDetail(`${match.url + '/' + list.id}`)}
 									>
-								  		<span className="tab">{this.getTab(list.tab, list.top)}</span>{list.title}<Brief>{`${list.reply_count}/${list.visit_count}`}</Brief>
+								  		<span className="hc-label">{this.getTab(list.tab, list.top)}</span>{list.title}<Brief>{`${list.reply_count}/${list.visit_count}`}</Brief>
 									</Item>
 								)
 							})

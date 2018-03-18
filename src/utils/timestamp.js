@@ -7,12 +7,12 @@ export default function getDateDiff(dateTimeStamp){
     // let halfamonth = day * 15;
     let month = day * 30;
     let now = Date.now();
-    let diffValue = now - dateTimeStamp;
+    let diffValue = now - new Date(dateTimeStamp);
     if(diffValue < 0){
         return;
     }
     let monthC =diffValue/month;
-    let weekC =diffValue/(7*day);
+    // let weekC =diffValue/(7*day);
     let dayC =diffValue/day;
     let hourC =diffValue/hour;
     let minC =diffValue/minute;
@@ -23,9 +23,9 @@ export default function getDateDiff(dateTimeStamp){
           result="" + parseInt(monthC/12, 10) + "年前";
         }
     }
-    else if(weekC>=1){
-        result="" + parseInt(weekC, 10) + "周前";
-    }
+    // else if(weekC>=1){
+    //     result="" + parseInt(weekC, 10) + "周前";
+    // }
     else if(dayC>=1){
         result=""+ parseInt(dayC, 10) +"天前";
     }
