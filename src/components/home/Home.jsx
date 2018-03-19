@@ -17,13 +17,15 @@ class Home extends Component {
 			topicsList: [],
 			page: 1,
 			tab: null,
-			selectedIndex: 0
+			selectedIndex: 0,
+			loading: false,
 		}
 	}
-	componentDidMount(){
+	componentWillMount(){
 		this.getData();
 	}
 	getData(){
+		this.setState({loading: true});
 		axios.get(getPath('topics'),{
 			params: {
 				page: this.state.page,
@@ -35,7 +37,7 @@ class Home extends Component {
 			if(data.success){
 				topicsList = topicsList.concat(data.data);
 				console.log(topicsList)
-				this.setState({topicsList})
+				this.setState({topicsList, loading: false});
 			}
 		})
 		.catch((err)=>{
@@ -54,6 +56,9 @@ class Home extends Component {
 			case 3:
 				this.setState({tab: 'job'});
 				break;
+			case 4:
+				this.setState({tab: 'good'});
+				break;
 			default:
 				this.setState({tab: null});
 				break;
@@ -67,16 +72,21 @@ class Home extends Component {
 			this.getData();
 		})
 	}
-	getTab(tab, top){
+	getTab(tab, top, good){
 		let tabsList = {
 			ask: '问答',
 			share: '分享',
 			job: '招聘',
+			good: '精华'
 		}
-		return top ? '置顶' : tabsList[tab];
+		return top 
+			? '置顶' 
+			: good
+				? '精华'
+				: tabsList[tab];
 	}
 	// 跳转到详情页
-	toDetail(url){
+	goToDetailPage(url){
 		return ()=>{
 			this.props.history.push({
 				pathname: url
@@ -89,7 +99,7 @@ class Home extends Component {
 		return (
 			<WingBlank size="sm" className="home">					
 				<div className="home-segment">
-					<SegmentedControl selectedIndex={this.state.selectedIndex} values={['全部', '分享', '问答', '招聘']} onChange={this.segmentChange.bind(this)}/>
+					<SegmentedControl selectedIndex={this.state.selectedIndex} values={['全部', '分享', '问答', '招聘', '精华']} onChange={this.segmentChange.bind(this)}/>
 				</div>
 				<div className="home-content">
 					<List className="my-list">
@@ -102,20 +112,22 @@ class Home extends Component {
 							}}
 						>
 						{
-							this.state.topicsList.map((list)=>{
-								return (
-									<Item 
-										key={list.id}
-										extra={getDateDiff(list.last_reply_at)} 
-										align="middle" 
-										thumb={list.author.avatar_url}
-										multipleLine
-										onClick={this.toDetail(`${match.url + '/' + list.id}`)}
-									>
-								  		<span className={list.top ? 'hc-label heightLight-label' : 'hc-label'}>{this.getTab(list.tab, list.top)}</span>{list.title}<Brief>{`${list.reply_count}/${list.visit_count}`}</Brief>
-									</Item>
-								)
-							})
+							!this.state.loading 
+								? this.state.topicsList.map((list, index)=>{
+									return (
+										<Item 
+											key={index}
+											extra={getDateDiff(list.last_reply_at)} 
+											align="middle" 
+											thumb={list.author.avatar_url}
+											multipleLine
+											onClick={this.goToDetailPage(`${match.url + '/' + list.id}`)}
+										>
+									  		<span className={(list.top || list.good) ? 'hc-label heightLight-label' : 'hc-label'}>{this.getTab(list.tab, list.top, list.good)}</span>{list.title}<Brief>{`${list.reply_count}/${list.visit_count}`}</Brief>
+										</Item>
+									)
+								}) 
+								: null
 						}
 						</PullToRefresh>
 					</List>

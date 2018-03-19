@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect, NavLink } from 'react-router-dom'
 import { WingBlank } from 'antd-mobile'
 import Home from './home/Home'
+import User from './user/User'
 import logo from '../assets/img/cnodejs_light.svg'
 import 'antd-mobile/dist/antd-mobile.css'
 import '../assets/css/reset.css'
@@ -27,6 +28,7 @@ class App extends Component {
         <div className="app-content">
           <Switch>
             <Route path="/home" component={Home} />
+            <Route path="/user/:loginname" component={User} />
             <Redirect from="/" to="/home" />
             <Route component={Home} />
           </Switch>

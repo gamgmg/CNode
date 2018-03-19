@@ -74,6 +74,13 @@ class Detail extends Component {
 			}
 		}
 	}
+	goToUserPage(loginname){
+		return ()=>{
+			this.props.history.push({
+				pathname: `/user/${loginname}`
+			})
+		}
+	}
 	render(){
 		let { title, top, content, create_at, author, visit_count, tab, replies } = this.state.detailData; 
 		let repliesList = replies
@@ -81,11 +88,12 @@ class Detail extends Component {
 				return (
 					<div className={ this.setHeightLight(reply) ? 'cell reply_highlight' : 'cell' } key={ reply.id }>
 						<Item 
+							key={index}
 							extra={reply.ups.length} 
 							align="middle" 
 							thumb={reply.author.avatar_url}
 						>
-					  		<span>{ reply.author.loginname }</span>
+					  		<span onClick={this.goToUserPage(reply.author.loginname)}>{ reply.author.loginname }</span>
 					  		<a>
 					  			<span> { ++index }楼</span>
 					  			<span> { getDateDiff(reply.create_at) }</span>
