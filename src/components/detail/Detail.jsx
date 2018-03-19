@@ -11,7 +11,8 @@ class Detail extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			detailData: {}
+			detailData: Object.create(null),
+			topThreeList: []
 		}
 	}
 	componentDidMount(){
@@ -24,6 +25,8 @@ class Detail extends Component {
 			if(data.success){
 				this.setState({
 					detailData: data.data
+				}, ()=>{
+					data.data.replies && this.getTopThreeList(data.data.replies);
 				})
 				
 			}
@@ -44,26 +47,29 @@ class Detail extends Component {
 		}
 		return tabsList[tab];
 	}
-	// 设置高亮
-	setHeightLight(replies, target){
+	// 获取点赞数大于3的回复列表
+	getTopThreeList(replies){
 		if(!replies) return; 
-		let repliesFilter = replies.filter( reply => reply.ups.length >=3 )
-
-		for(let j=0;j<repliesFilter.length-1;j++){
+		let topThreeList = replies.filter( reply => reply.ups.length >=3 )
+		for(let j=0;j<topThreeList.length-1;j++){
 	    	//两两比较，如果前一个比后一个大，则交换位置。
-	       	for(let i=0;i<repliesFilter.length-1-j;i++){
-	            if(repliesFilter[i].ups.length<repliesFilter[i+1].ups.length){
-	                let temp = repliesFilter[i];
-	                repliesFilter[i] = repliesFilter[i+1];
-	                repliesFilter[i+1] = temp;
+	       	for(let i=0;i<topThreeList.length-1-j;i++){
+	            if(topThreeList[i].ups.length<topThreeList[i+1].ups.length){
+	                let temp = topThreeList[i];
+	                topThreeList[i] = topThreeList[i+1];
+	                topThreeList[i+1] = temp;
 	            }
 	        } 
 	    }
+	    this.setState({ topThreeList });
+	}
+	// 点赞数前三的回复设置高亮
+	setHeightLight(target){		
+		let topThreeList = this.state.topThreeList,
+			topThreeListLen = topThreeList.length;
 
-		// console.log(repliesFilter)		
-
-		for(let i=0; i < (repliesFilter.length < 3 ? repliesFilter.length : 3); i++){
-			if(repliesFilter[i].id === target.id){
+		for(let i=0; i < (topThreeListLen < 3 ? topThreeListLen : 3); i++){
+			if(topThreeList[i].id === target.id){
 				return true;
 			}
 		}
@@ -73,7 +79,7 @@ class Detail extends Component {
 		let repliesList = replies
 			? replies.map((reply, index)=>{
 				return (
-					<div className={ this.setHeightLight(replies, reply) ? 'cell reply_highlight' : 'cell' } key={ reply.id }>
+					<div className={ this.setHeightLight(reply) ? 'cell reply_highlight' : 'cell' } key={ reply.id }>
 						<Item 
 							extra={reply.ups.length} 
 							align="middle" 
@@ -84,6 +90,14 @@ class Detail extends Component {
 					  			<span> { ++index }楼</span>
 					  			<span> { getDateDiff(reply.create_at) }</span>
 				  			</a>
+				  			{
+				  				author 
+				  					? author.loginname === reply.author.loginname
+				  						? ( <span className="authorLabel">作者</span> ) 
+				  						: null
+			  						: null
+				  			}
+				  			
 						</Item>
 						<div className="dc-reply-content">
 							<div dangerouslySetInnerHTML={{__html: this.escape(reply.content?`${reply.content}`:'')}} />

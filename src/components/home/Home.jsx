@@ -34,7 +34,7 @@ class Home extends Component {
 		.then(({data})=>{
 			if(data.success){
 				topicsList = topicsList.concat(data.data);
-				// console.log(topicsList)
+				console.log(topicsList)
 				this.setState({topicsList})
 			}
 		})
@@ -112,7 +112,7 @@ class Home extends Component {
 										multipleLine
 										onClick={this.toDetail(`${match.url + '/' + list.id}`)}
 									>
-								  		<span className="hc-label">{this.getTab(list.tab, list.top)}</span>{list.title}<Brief>{`${list.reply_count}/${list.visit_count}`}</Brief>
+								  		<span className={list.top ? 'hc-label heightLight-label' : 'hc-label'}>{this.getTab(list.tab, list.top)}</span>{list.title}<Brief>{`${list.reply_count}/${list.visit_count}`}</Brief>
 									</Item>
 								)
 							})

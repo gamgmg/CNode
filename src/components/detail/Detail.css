@@ -85,6 +85,13 @@
 			& .dc-reply-content {
 				clear: both;
 			}
+			& .authorLabel {
+			    color: #fff;
+			    background-color: #6ba44e;
+			    padding: 2px;
+			    margin-left: 4px;
+			    font-size: 12px;
+			}
 		}
 		& .reply_highlight {
 			background-color: #f4fcf0;
