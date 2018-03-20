@@ -1,3 +1,137 @@
 :root {
 	--baseLightColor: #80bd01
 }
+
+.panel {
+	& .header {
+		padding: 10px;
+    	background-color: #f6f6f6;
+    	border-radius: 3px 3px 0 0;
+    	& .col_fade {
+    		color: #444;
+    	}
+	}
+	& .cell {
+		padding-right: 10px;
+    	background-color: #fff;
+    	border-top: 1px solid #f0f0f0;
+	}
+	& .inner {
+		padding: 10px;
+    	border-radius: 0 0 3px 3px;
+    	line-height: 2em;
+    	background-color: #fff;
+    	&.userinfo {
+    		padding: 10px;
+    		border-top: 1px solid #e5e5e5;
+    	}
+    	& a {
+    		color: #778087;
+    	}
+    	& li {
+    		line-height: 2em;
+    	}
+	}
+}
+
+.breadcrumb {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: 0 0;
+    & li {
+    	list-style: none;
+    	& >.divider {
+    		padding: 0 5px;
+    		color: #ccc;
+    	}
+    }
+    & a {
+    	color: var(--baseLightColor);
+    }
+}
+
+.user_big_avatar {
+	float: left;
+	margin-right: 10px;
+	& img {
+		width: 40px;
+		height: 40px;
+		border-radius: 3px;
+	}
+}
+
+.user_profile {
+	margin-top: 0;
+	clear: left;
+}
+
+ul.unstyled {
+	margin-left: 0;
+	list-style: none;
+}
+
+.big {
+	font-size: 14px;
+}
+
+.col_fade {
+    color: #ababab;
+}
+
+.pull-left {
+    float: left;
+}
+
+.user_avatar, .user_big_avatar {
+	& img {
+		width: 30px;
+    	height: 30px;
+    	border-radius: 3px;
+	}
+}
+
+div pre.prettyprint {
+	font-size: 14px;
+    border-radius: 0;
+    padding: 0 15px;
+    border: none;
+    margin: 20px -10px;
+    border-width: 1px 0;
+    background: #f7f7f7;
+    tab-size: 4;
+}
+
+pre.prettyprint {
+    padding: 2px;
+    border: 1px solid #888;
+}
+
+pre {
+    background: #fee9cc;
+    border: 1px dashed #ccc;
+    line-height: 22px;
+}
+
+pre {
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+}
+
+code, pre {
+    padding: 0 3px 2px;
+    font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+    font-size: 12px;
+    color: #333;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
