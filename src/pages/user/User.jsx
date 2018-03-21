@@ -20,7 +20,7 @@ class User extends Component {
 		axios.get(getPath(`user/${this.props.match.params.loginname}`))
 			.then(({data})=>{
 				if(data.success){
-					console.log(data.data)
+					// console.log(data.data)
 					this.setState({
 						userInfo: data.data
 					})
@@ -40,8 +40,8 @@ class User extends Component {
 				? '精华'
 				: tabsList[tab];
 	}
-	// 跳转到详情页
-	goToDetailPage(url){
+	// 跳转页面
+	changePage(url){
 		return ()=>{
 			this.props.history.push({
 				pathname: url
@@ -49,9 +49,7 @@ class User extends Component {
 		}
 	}
 	render(){
-		let { match } = this.props;
-		// console.log(match)
-		let { avatar_url, create_at, githubUsername, loginname, recent_replies, recent_topics, score } = this.state.userInfo;
+		let { avatar_url, create_at, loginname, recent_replies, recent_topics, score } = this.state.userInfo;
 		return (
 			<WingBlank size="sm">
 				<div className="user">
@@ -60,14 +58,14 @@ class User extends Component {
 						<div className="header">
 							<ul className="breadcrumb">
 								<li>
-									<a>主页</a>
+									<a onClick={ this.changePage('/') }>主页</a>
 									<span className="divider"> / </span>
 								</li>
 							</ul>
 						</div>
 						<div className="inner userinfo">
 							<div className="user_big_avatar">
-								<img src={ avatar_url }/>
+								<img src={ avatar_url } alt={loginname}/>
 							</div>
 							<a className="dark">{ loginname }</a>
 							<div className="user_profile">
@@ -76,11 +74,6 @@ class User extends Component {
 									<li>
 										<a className="dark">
 											<span>查看话题收藏</span>
-										</a>
-									</li>
-									<li>
-										<a className="dark">
-											<span>@{ githubUsername }</span>
 										</a>
 									</li>
 								</ul>
@@ -93,9 +86,9 @@ class User extends Component {
 							<span className="col_fade">最近创建的话题</span>
 						</div>
 						{
-							recent_replies 
-								? recent_replies.length !== 0 
-									? recent_replies.map((list, index)=>{
+							recent_topics 
+								? recent_topics.length !== 0 
+									? recent_topics.map((list, index)=>{
 										return (
 											<Item 
 												key={index}
@@ -103,7 +96,7 @@ class User extends Component {
 												align="middle" 
 												thumb={list.author.avatar_url}
 												multipleLine
-												onClick={this.goToDetailPage(`${match.url + '/' + list.id}`)}
+												onClick={this.changePage(`/topic/${list.id}`)}
 											>
 										  		<span className={(list.top || list.good) ? 'hc-label heightLight-label' : 'hc-label'}>{this.getTab(list.tab, list.top, list.good)}</span>{list.title}
 											</Item>
@@ -117,6 +110,36 @@ class User extends Component {
 								: null 
 						}
 					</div>
+					<div className="panel">
+						<div className="header">
+							<span className="col_fade">最近参与的话题</span>
+						</div>
+						{
+							recent_replies 
+								? recent_replies.length !== 0 
+									? recent_replies.map((list, index)=>{
+										return (
+											<Item 
+												key={index}
+												extra={getDateDiff(list.last_reply_at)} 
+												align="middle" 
+												thumb={list.author.avatar_url}
+												multipleLine
+												onClick={this.changePage(`/topic/${list.id}`)}
+											>
+										  		<span className={(list.top || list.good) ? 'hc-label heightLight-label' : 'hc-label'}>{this.getTab(list.tab, list.top, list.good)}</span>{list.title}
+											</Item>
+										)	
+									})
+									: (
+										<div className="inner">
+											<p>无话题</p>
+										</div>
+									)
+								: null 
+						}
+					</div>
+					<WhiteSpace />
 				</div>
 			</WingBlank>
 		)

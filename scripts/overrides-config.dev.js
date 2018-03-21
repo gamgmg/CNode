@@ -41,6 +41,11 @@ module.exports = function(config) {
         // use: ["style-loader", "css-loader", "sass-loader"]
     });
 
+    // 按需加载antd-mobile组件
+    loaderList[1].options.plugins = [['import', {
+        'libraryName': 'antd-mobile'
+    }]]
+
     // Use Poststylus Plugin to handle stylus
 // config.plugins.push(baseConfig.loaderOptionsPlugin);
 

@@ -3,11 +3,12 @@ import { NavBar, Icon, WingBlank, WhiteSpace, List } from 'antd-mobile'
 import axios from 'axios'
 import getPath from '@/config/api'
 import getDateDiff from '@/utils/timestamp'
-import './Detail.css'
+import './Topic.css'
+import 'github-markdown-css/github-markdown.css'
 
 let Item = List.Item
 
-class Detail extends Component {
+class Topic extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
@@ -41,9 +42,11 @@ class Detail extends Component {
 	}
 	fromTo(tab){
 		let tabsList = {
-			ask: '问答',
+			good: '精华',
 			share: '分享',
+			ask: '问答',
 			job: '招聘',
+			dev: '客户端测试',
 		}
 		return tabsList[tab];
 	}
@@ -74,46 +77,16 @@ class Detail extends Component {
 			}
 		}
 	}
-	goToUserPage(loginname){
+	goToUserPage(url){
 		return ()=>{
 			this.props.history.push({
-				pathname: `/user/${loginname}`
+				pathname: url
 			})
 		}
 	}
 	render(){
 		let { title, top, content, create_at, author, visit_count, tab, replies } = this.state.detailData; 
-		let repliesList = replies
-			? replies.map((reply, index)=>{
-				return (
-					<div className={ this.setHeightLight(reply) ? 'cell reply_highlight' : 'cell' } key={ reply.id }>
-						<Item 
-							key={index}
-							extra={reply.ups.length} 
-							align="middle" 
-							thumb={reply.author.avatar_url}
-						>
-					  		<span onClick={this.goToUserPage(reply.author.loginname)}>{ reply.author.loginname }</span>
-					  		<a>
-					  			<span> { ++index }楼</span>
-					  			<span> { getDateDiff(reply.create_at) }</span>
-				  			</a>
-				  			{
-				  				author 
-				  					? author.loginname === reply.author.loginname
-				  						? ( <span className="authorLabel">作者</span> ) 
-				  						: null
-			  						: null
-				  			}
-				  			
-						</Item>
-						<div className="dc-reply-content">
-							<div dangerouslySetInnerHTML={{__html: this.escape(reply.content?`${reply.content}`:'')}} />
-						</div>
-					</div>
-				)
-			})
-			: null
+		// let repliesList = 
 		return (
 			<div className="detail">
 				<WingBlank size="sm">
@@ -141,7 +114,7 @@ class Detail extends Component {
 								<span>发布于{ getDateDiff(create_at) }</span>
 								{
 									author
-										? ( <span>作者 { author.loginname }</span> )
+										? ( <span onClick={this.goToUserPage(`/user/${author.loginname}`)}>作者 { author.loginname }</span> )
 										: null
 								}
 								<span>{ visit_count }次浏览</span>
@@ -166,7 +139,39 @@ class Detail extends Component {
 						    	}回复
 							</span>
 						</div>
-						{ repliesList }
+						{ 
+							replies
+								? replies.map((reply, index)=>{
+									return (
+										<div className={ this.setHeightLight(reply) ? 'cell reply_highlight' : 'cell' } key={ reply.id }>
+											<Item 
+												key={index}
+												extra={reply.ups.length} 
+												align="middle" 
+												thumb={reply.author.avatar_url}
+											>
+										  		<span onClick={this.goToUserPage(`/user/${reply.author.loginname}`)}>{ reply.author.loginname }</span>
+										  		<a>
+										  			<span> { ++index }楼</span>
+										  			<span> { getDateDiff(reply.create_at) }</span>
+									  			</a>
+									  			{
+									  				author 
+									  					? author.loginname === reply.author.loginname
+									  						? ( <span className="authorLabel">作者</span> ) 
+									  						: null
+								  						: null
+									  			}
+									  			
+											</Item>
+											<div className="dc-reply-content">												
+												<div className="markdown-body" dangerouslySetInnerHTML={{__html: this.escape(reply.content?`${reply.content}`:'')}} />
+											</div>
+										</div>
+									)
+								})
+								: null
+						}
 					</div>
 				</WingBlank>
 			</div>
@@ -174,4 +179,4 @@ class Detail extends Component {
 	}
 }
 
-export default Detail;
+export default Topic;

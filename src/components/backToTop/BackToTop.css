@@ -1,0 +1,16 @@
+.backToTop {
+    width: 24px;
+    color: gray;
+    padding: 12px 0 12px 5px;
+    display: block;
+    position: fixed;
+    cursor: pointer;
+    text-align: center;
+    z-index: 200;
+    border-radius: 12px 0 0 12px;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-right: 0;
+    top: 387px;
+    right: 0px;
+}
