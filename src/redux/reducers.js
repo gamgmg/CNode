@@ -6,7 +6,8 @@ const initState = {
 		success: false,
 		avatar_url: '',
 		id: '',
-		loginname: ''
+		loginname: '',
+		accessToken: ''
 	}
 }
 
@@ -14,6 +15,8 @@ function loginInfo(state = initState.loginInfo, action){
 	switch(action.type){
 		case ActionTypes.LOGIN:
 			return action.loginInfo;
+		case ActionTypes.LOGOUT:
+			return { success: false, avatar_url: '', id: '', loginname: '', accessToken: '' }; 
 		default:
 			return state;
 	}

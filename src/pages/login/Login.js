@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { WingBlank, WhiteSpace, List, InputItem, Button, Toast } from 'antd-mobile'
+import { WingBlank, WhiteSpace, InputItem, Button, Toast } from 'antd-mobile'
 import axios from 'axios'
 import getPath from '@/config/api'
 
@@ -29,7 +29,9 @@ class Login extends Component {
 			.then(({data})=>{
 				this.setState({disabled: false,loading: false})
 				if(data.success){
-					console.log(data)
+					// console.log(data)
+					let loginInfo = Object.assign({}, data, { accessToken: this.state.accessToken })
+					this.props.setLoginInfo(loginInfo);
 					this.props.history.push({
 						pathname: '/'
 					})
@@ -41,7 +43,6 @@ class Login extends Component {
 			})
 	}
 	render(){
-		console.log(this.props.loginInfo);
 		return (
 			<WingBlank size="sm">
 				<WhiteSpace />
@@ -66,7 +67,7 @@ class Login extends Component {
 										accesstoken: value
 									})
 								}}
-							>accessToken</InputItem>
+							></InputItem>
 							<WhiteSpace />
 							<Button 
 								type="primary" 

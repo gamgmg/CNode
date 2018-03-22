@@ -30,30 +30,28 @@ class Home extends Component {
 	}
 	getData(){
 		this.setState({loading: true, refreshing: true});
-		axios.get(getPath('topics'),{
-			params: {
-				page: this.state.page,
-				limit: 20,
-				tab: this.state.tab
-			}
-		})
-		.then(({data})=>{
-			if(data.success){
-				topicsList = topicsList.concat(data.data);
-				// console.log(topicsList)
-				this.setState({
-					topicsList, 
-					loading: false,
-					dataSource: this.state.dataSource.cloneWithRows(topicsList),
-					refreshing: false,
-				}, ()=>{
-					// console.log(this.state.dataSource)
-				});
-			}
-		})
-		.catch((err)=>{
-			console.log(err)
-		})
+		axios
+			.get(getPath('topics'),{
+				params: {
+					page: this.state.page,
+					limit: 20,
+					tab: this.state.tab
+				}
+			})
+			.then(({data})=>{
+				if(data.success){
+					topicsList = topicsList.concat(data.data);
+					this.setState({
+						topicsList, 
+						loading: false,
+						dataSource: this.state.dataSource.cloneWithRows(topicsList),
+						refreshing: false,
+					});
+				}
+			})
+			.catch((err)=>{
+				console.log(err)
+			})
 	}
 	// 切换类型
 	segmentChange(e){
@@ -91,7 +89,7 @@ class Home extends Component {
 			share: '分享',
 			ask: '问答',
 			job: '招聘',
-			dev: '客户端测试'
+			dev: '测试'
 		}
 		return top 
 			? '置顶' 
@@ -125,17 +123,10 @@ class Home extends Component {
 				</Item>
 			)
 		}
-		function MyBody(props) {
-		  	return (
-			    <div className="am-list-body my-body" style={{position: 'inherit', width: '100%'}}>
-			      	{props.children}
-			    </div>
-		  	)
-		}
 		return (
 			<ListView 
 				style={{
-					height: document.querySelector('.app-content').offsetHeight,
+					height: document.querySelector('.app-content').offsetHeight - 28 + 'px',
 					overflow: 'auto',
 				}}
 				dataSource={this.state.dataSource}
@@ -168,51 +159,12 @@ class Home extends Component {
 		)
 	}
 	render() {
-		// let { match } = this.props;
-		// console.log(match)
 		return (
 			<WingBlank size="sm" className="home">					
 				<div className="home-segment">
-					<SegmentedControl selectedIndex={this.state.selectedIndex} values={['全部', '精华', '分享', '问答', '招聘', '客户端测试']} onChange={this.segmentChange.bind(this)}/>
+					<SegmentedControl selectedIndex={this.state.selectedIndex} values={['全部', '精华', '分享', '问答', '招聘', '测试']} onChange={this.segmentChange.bind(this)}/>
 				</div>
 				<div className="home-content">
-					{/*<List className="my-list">
-						<PullToRefresh
-							direction='up'
-							onRefresh={()=>{
-								let current = this.state.page;
-								this.setState({page: ++current});
-								this.getData();
-							}}
-						>
-						{
-							!this.state.loading 
-								? this.state.topicsList.map((list, index)=>{
-									return (
-										<Item 
-											key={index}
-											extra={getDateDiff(list.last_reply_at)} 
-											align="middle" 
-											thumb={list.author.avatar_url}
-											multipleLine
-											onClick={this.goToDetailPage(`/topic/${list.id}`)}
-										>
-									  		<span className={(list.top || list.good) ? 'hc-label heightLight-label' : 'hc-label'}>{this.getTab(list.tab, list.top, list.good)}</span>{list.title}<Brief>{`${list.reply_count}/${list.visit_count}`}</Brief>
-										</Item>
-									)
-								}) 
-								: (
-									<div className="skeleton-Screen">
-										<div className="skeleton-Screen-img"></div>
-										<div className="skeleton-Screen-content">
-											<div className="skeleton-Screen-title"></div>
-											<div className="skeleton-Screen-count"></div>
-										</div>
-									</div>
-								)
-						}
-						</PullToRefresh>
-					</List>*/}
 					{
 						this.state.dataSource.length !== 0 
 							? this.renderList()

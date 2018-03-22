@@ -20,18 +20,18 @@ class Topic extends Component {
 		this.getData();
 	}
 	getData(){
-		axios.get(getPath(`topic/${this.props.match.params.id}`))
-		.then(({ data })=>{
-			console.log(data)
-			if(data.success){
-				this.setState({
-					detailData: data.data
-				}, ()=>{
-					data.data.replies && this.getTopThreeList(data.data.replies);
-				})
-				
-			}
-		})
+		axios
+			.get(getPath(`topic/${this.props.match.params.id}`))
+			.then(({ data })=>{
+				if(data.success){
+					this.setState({
+						detailData: data.data
+					}, ()=>{
+						data.data.replies && this.getTopThreeList(data.data.replies);
+					})
+					
+				}
+			})
 	}
 	clickBack(){
 		window.history.back();
@@ -46,7 +46,7 @@ class Topic extends Component {
 			share: '分享',
 			ask: '问答',
 			job: '招聘',
-			dev: '客户端测试',
+			dev: '测试',
 		}
 		return tabsList[tab];
 	}
@@ -55,7 +55,7 @@ class Topic extends Component {
 		if(!replies) return; 
 		let topThreeList = replies.filter( reply => reply.ups.length >=3 )
 		for(let j=0;j<topThreeList.length-1;j++){
-	    	//两两比较，如果前一个比后一个大，则交换位置。
+	    	//两两比较，如果前一个比后一个小，则交换位置。
 	       	for(let i=0;i<topThreeList.length-1-j;i++){
 	            if(topThreeList[i].ups.length<topThreeList[i+1].ups.length){
 	                let temp = topThreeList[i];
@@ -86,7 +86,6 @@ class Topic extends Component {
 	}
 	render(){
 		let { title, top, content, create_at, author, visit_count, tab, replies } = this.state.detailData; 
-		// let repliesList = 
 		return (
 			<div className="detail">
 				<WingBlank size="sm">
@@ -172,6 +171,7 @@ class Topic extends Component {
 								})
 								: null
 						}
+						<WhiteSpace />
 					</div>
 				</WingBlank>
 			</div>

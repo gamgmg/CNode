@@ -79,6 +79,14 @@ ul.unstyled {
 	font-size: 14px;
 }
 
+.messages_count {
+	border-radius: 8px;
+    padding: 1px 5px;
+    background-color: var(--baseLightColor);
+    color: #fff;
+    margin-right: .5em;
+}
+
 .col_fade {
     color: #ababab;
 }

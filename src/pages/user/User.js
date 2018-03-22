@@ -17,10 +17,10 @@ class User extends Component {
 		this.getData();
 	}
 	getData(){
-		axios.get(getPath(`user/${this.props.match.params.loginname}`))
+		axios
+			.get(getPath(`user/${this.props.match.params.loginname}`))
 			.then(({data})=>{
 				if(data.success){
-					// console.log(data.data)
 					this.setState({
 						userInfo: data.data
 					})
