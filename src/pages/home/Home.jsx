@@ -9,8 +9,6 @@ const Brief = Item.Brief
 
 let topicsList = []
 
-
-
 class Home extends Component {
 	constructor(props){
 		super(props);
@@ -18,21 +16,20 @@ class Home extends Component {
 			rowHasChanged: (row1, row2) => row1 !== row2 
 		})
 		this.state = {
-			dataSource: dataSource.cloneWithRows({}),
+			dataSource: dataSource.cloneWithRows(topicsList),
 			topicsList: [],
 			page: 1,
 			tab: null,
 			selectedIndex: 0,
 			loading: false,
+			refreshing: false,
 		}
-
-
 	}
 	componentWillMount(){
 		this.getData();
 	}
 	getData(){
-		this.setState({loading: true});
+		this.setState({loading: true, refreshing: true});
 		axios.get(getPath('topics'),{
 			params: {
 				page: this.state.page,
@@ -48,8 +45,9 @@ class Home extends Component {
 					topicsList, 
 					loading: false,
 					dataSource: this.state.dataSource.cloneWithRows(topicsList),
+					refreshing: false,
 				}, ()=>{
-					console.log(this.state.dataSource)
+					// console.log(this.state.dataSource)
 				});
 			}
 		})
@@ -80,7 +78,6 @@ class Home extends Component {
 				break;
 		}
 		topicsList = [];
-		// setTimeout(()=>{this.getData()},10);
 		this.setState({
 			selectedIndex: e.nativeEvent.selectedSegmentIndex,
 			page: 1
@@ -119,6 +116,7 @@ class Home extends Component {
 					align="middle" 
 					thumb={rowData.author.avatar_url}
 					multipleLine
+					wrap={true}
 					onClick={this.goToDetailPage(`/topic/${rowData.id}`)}
 				>
 			  		<span className={(rowData.top || rowData.good) ? 'hc-label heightLight-label' : 'hc-label'}>{this.getTab(rowData.tab, rowData.top, rowData.good)}</span>
@@ -137,7 +135,7 @@ class Home extends Component {
 		return (
 			<ListView 
 				style={{
-					height: document.querySelector('.app-content').offsetHeight - 28 +'px',
+					height: document.querySelector('.app-content').offsetHeight,
 					overflow: 'auto',
 				}}
 				dataSource={this.state.dataSource}
@@ -146,17 +144,25 @@ class Home extends Component {
 			          	{this.state.loading ? '加载中' : '加载完成'}
 			        </div>
 				)}
-				renderBodyComponent={() => <MyBody />}
 				renderRow={row}
 				pageSize={4}
-				scrollRenderAheadDistance={50}
+				scrollRenderAheadDistance={200}
 		        scrollEventThrottle={20}
 		        onEndReachedThreshold={10}
+				pullToRefresh={
+					<PullToRefresh 
+						refreshing={this.state.refreshing}
+						distanceToRefresh={100}
+						onRefresh={()=>{
+							this.setState({page: 1});
+							this.getData();
+						}}
+					/>
+				}
 		        onEndReached={(event)=>{
 					let current = this.state.page;
 					this.setState({page: ++current});
 					this.getData();
-					// this.setState({dataSource: this.state.dataSource.cloneWithRowsAndSections(dataBlobs, sectionIDs, rowIDs)})
 				}}
 			/>
 		)
@@ -210,15 +216,7 @@ class Home extends Component {
 					{
 						this.state.dataSource.length !== 0 
 							? this.renderList()
-							: (
-								<div className="skeleton-Screen">
-									<div className="skeleton-Screen-img"></div>
-									<div className="skeleton-Screen-content">
-										<div className="skeleton-Screen-title"></div>
-										<div className="skeleton-Screen-count"></div>
-									</div>
-								</div>
-							)
+							: null
 					}
 				</div>
 			</WingBlank>

@@ -28,7 +28,7 @@ const LoadableUser = Loadable({
 })
 
 const LoadableLogin = Loadable({
-  loader: () => import('./login/Login'),
+  loader: () => import('../containers/Login'),
   loading: any => null,
   delay: 300
 })

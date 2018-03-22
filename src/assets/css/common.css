@@ -138,3 +138,7 @@ ul.unstyled {
         }
     }
 }
+
+.am-pull-to-refresh-indicator {
+    padding-top: 0 !important;
+}

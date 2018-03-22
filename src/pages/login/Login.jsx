@@ -1,16 +1,47 @@
 import React, { Component } from 'react'
-import { WingBlank, WhiteSpace, List } from 'antd-mobile'
+import { WingBlank, WhiteSpace, List, InputItem, Button, Toast } from 'antd-mobile'
+import axios from 'axios'
+import getPath from '@/config/api'
 
 class Login extends Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			disabled: false,
+			loading: false,
+			accessToken: '0a1d9039-4ed7-4f8d-b78b-ec9d39a34baa',
+		}
+	}
 	// 跳转页面
 	changePage(url){
 		return ()=>{
+			console.log(url)
 			this.props.history.push({
 				pathname: url
 			})
 		}
 	}
+	login(){
+		this.setState({disabled: true,loading: true});
+		axios.post(getPath('accesstoken'), {
+			accesstoken: this.state.accessToken
+		})
+			.then(({data})=>{
+				this.setState({disabled: false,loading: false})
+				if(data.success){
+					console.log(data)
+					this.props.history.push({
+						pathname: '/'
+					})
+				}
+			})
+			.catch((err)=>{
+				this.setState({disabled: false,loading: false})
+				Toast.info('accessToken错误');
+			})
+	}
 	render(){
+		console.log(this.props.loginInfo);
 		return (
 			<WingBlank size="sm">
 				<WhiteSpace />
@@ -25,7 +56,25 @@ class Login extends Component {
 								<li className="active">登录</li>
 							</ul>
 						</div>
-						<div className="inner"></div>
+						<WhiteSpace />
+						<div className="inner">
+							<InputItem 
+								disabled={this.state.disabled} 
+								placeholder="请输入accessToken"
+								onChange={(value)=>{
+									this.setState({
+										accesstoken: value
+									})
+								}}
+							>accessToken</InputItem>
+							<WhiteSpace />
+							<Button 
+								type="primary" 
+								style={{color: '#fff'}} 
+								onClick={()=>this.login()}
+								loading={this.state.loading}
+							>登录</Button>
+						</div>
 					</div>
 				</div>
 			</WingBlank>
