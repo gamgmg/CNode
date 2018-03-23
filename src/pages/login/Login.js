@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { WingBlank, WhiteSpace, InputItem, Button, Toast } from 'antd-mobile'
+import sessionStorage from '../../utils/storage'
 import axios from 'axios'
 import getPath from '@/config/api'
 
@@ -23,24 +24,26 @@ class Login extends Component {
 	}
 	login(){
 		this.setState({disabled: true,loading: true});
-		axios.post(getPath('accesstoken'), {
-			accesstoken: this.state.accessToken
-		})
+		axios
+			.post(getPath('accesstoken'), {
+				accesstoken: this.state.accessToken
+			})
 			.then(({data})=>{
 				this.setState({disabled: false,loading: false})
 				if(data.success){
-					// console.log(data)
 					let loginInfo = Object.assign({}, data, { accessToken: this.state.accessToken })
+					// 缓存数据
+					sessionStorage.setLoginInfo(JSON.stringify(loginInfo));
 					this.props.setLoginInfo(loginInfo);
 					this.props.history.push({
 						pathname: '/'
 					})
 				}
 			})
-			.catch((err)=>{
-				this.setState({disabled: false,loading: false})
-				Toast.info('accessToken错误');
-			})
+			// .catch((err)=>{
+			// 	this.setState({disabled: false,loading: false})
+			// 	Toast.info('accessToken错误');
+			// })
 	}
 	render(){
 		return (

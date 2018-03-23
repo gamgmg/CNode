@@ -97,4 +97,9 @@
 			background-color: #f4fcf0;
 		}
 	}
+	& .collect_btn {
+		background-color: var(--baseLightColor);
+		color: #fff !important;
+		margin-top: 10px;
+	}
 }

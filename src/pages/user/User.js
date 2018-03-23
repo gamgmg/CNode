@@ -20,6 +20,7 @@ class User extends Component {
 		axios
 			.get(getPath(`user/${this.props.match.params.loginname}`))
 			.then(({data})=>{
+				console.log(data.data)
 				if(data.success){
 					this.setState({
 						userInfo: data.data
@@ -49,6 +50,7 @@ class User extends Component {
 		}
 	}
 	render(){
+		let { match } = this.props;
 		let { avatar_url, create_at, loginname, recent_replies, recent_topics, score } = this.state.userInfo;
 		return (
 			<WingBlank size="sm">
@@ -73,7 +75,7 @@ class User extends Component {
 									<span className="big">{ score } </span>积分
 									<li>
 										<a className="dark">
-											<span>查看话题收藏</span>
+											<span onClick={ this.changePage(`${match.url + '/collections' }`) }>查看话题收藏</span>
 										</a>
 									</li>
 								</ul>
@@ -86,8 +88,8 @@ class User extends Component {
 							<span className="col_fade">最近创建的话题</span>
 						</div>
 						{
-							recent_topics 
-								? recent_topics.length !== 0 
+							recent_topics &&
+								recent_topics.length !== 0 
 									? recent_topics.map((list, index)=>{
 										return (
 											<Item 
@@ -107,7 +109,6 @@ class User extends Component {
 											<p>无话题</p>
 										</div>
 									)
-								: null 
 						}
 					</div>
 					<div className="panel">
@@ -115,8 +116,8 @@ class User extends Component {
 							<span className="col_fade">最近参与的话题</span>
 						</div>
 						{
-							recent_replies 
-								? recent_replies.length !== 0 
+							recent_replies &&
+								recent_replies.length !== 0 
 									? recent_replies.map((list, index)=>{
 										return (
 											<Item 
@@ -136,7 +137,6 @@ class User extends Component {
 											<p>无话题</p>
 										</div>
 									)
-								: null 
 						}
 					</div>
 					<WhiteSpace />

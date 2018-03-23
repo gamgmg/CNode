@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import { NavBar, Icon, WingBlank, WhiteSpace, List } from 'antd-mobile'
+import { NavBar, Icon, WingBlank, WhiteSpace, List, Button } from 'antd-mobile'
+import BraftEditor from 'braft-editor'
 import axios from 'axios'
 import getPath from '@/config/api'
 import getDateDiff from '@/utils/timestamp'
-import './Topic.css'
 import 'github-markdown-css/github-markdown.css'
+import 'braft-editor/dist/braft.css'
+import './Topic.css'
 
 let Item = List.Item
 
@@ -13,11 +15,13 @@ class Topic extends Component {
 		super(props);
 		this.state = {
 			detailData: Object.create(null),
-			topThreeList: []
+			topThreeList: [],
+			isCollect: false,
+			editorData: ''
 		}
 	}
 	componentDidMount(){
-		this.getData();
+		this.getData();		
 	}
 	getData(){
 		axios
@@ -28,10 +32,21 @@ class Topic extends Component {
 						detailData: data.data
 					}, ()=>{
 						data.data.replies && this.getTopThreeList(data.data.replies);
+						this.props.loginInfo.loginname && this.getTopicCollects();
 					})
 					
 				}
 			})
+	}
+	// 获取用户收藏的主题
+	getTopicCollects(){
+		axios
+		.get(getPath(`topic_collect/${this.props.loginInfo.loginname}`))
+		.then(({data})=>{
+			data.data.map((value)=>{
+				value.id === this.state.detailData.id && this.setState({isCollect: true})
+			})
+		})
 	}
 	clickBack(){
 		window.history.back();
@@ -84,8 +99,57 @@ class Topic extends Component {
 			})
 		}
 	}
+	// 收藏主题
+	collectTopic(){
+		axios
+			.post(getPath('topic_collect/collect'), {
+				accesstoken: this.props.loginInfo.accessToken,
+				topic_id: this.state.detailData.id
+			})
+			.then(({data})=>{
+				data.success && this.setState({isCollect: true})
+			})
+	}
+	// 取消收藏
+	deCollectTopic(){
+		axios
+			.post(getPath('topic_collect/de_collect'), {
+				accesstoken: this.props.loginInfo.accessToken,
+				topic_id: this.state.detailData.id
+			})
+			.then(({data})=>{
+				data.success && this.setState({isCollect: false})
+			})
+	}
+	handleHTMLChange(data){
+		console.log(data)
+		this.setState({editorData: data})
+	}
+	replyTopic(){
+		console.log('回复', this.state.editorData)
+		axios
+			.post(getPath(`topic/${this.state.detailData.id}/replies`), {
+				accesstoken: this.props.loginInfo.accessToken,
+				content: this.state.editorData,
+			})
+			.then((res)=>{
+				console.log(res)
+			})
+	}
 	render(){
 		let { title, top, content, create_at, author, visit_count, tab, replies } = this.state.detailData; 
+
+		const editorProps = {
+	      	height: 0,
+	      	placeholder: '请输入内容',
+	      	onHTMLChange: this.handleHTMLChange.bind(this),
+	      	media: {
+	      		allowPasteImage: true,
+	      		image: true,
+	      	},
+	      	controls: ['bold', 'italic', 'emoji', 'list_ul', 'list_ol', 'blockquote', 'code', 'media']
+	    }
+
 		return (
 			<div className="detail">
 				<WingBlank size="sm">
@@ -103,21 +167,25 @@ class Topic extends Component {
 						<div className="dc-header">
 							<h1>
 								{
-									top 
-										? ( <span className="dc-header-label">置顶</span> ) 
-										: null
+									top && ( <span className="dc-header-label">置顶</span> ) 
 								}
 								{ title }
 							</h1>
 							<div className="dc-header-info">
 								<span>发布于{ getDateDiff(create_at) }</span>
 								{
-									author
-										? ( <span onClick={this.goToUserPage(`/user/${author.loginname}`)}>作者 { author.loginname }</span> )
-										: null
+									author && ( <span onClick={this.goToUserPage(`/user/${author.loginname}`)}>作者 { author.loginname }</span> )
+										
 								}
 								<span>{ visit_count }次浏览</span>
 								<span>来自 { this.fromTo(tab) }</span>
+								<br />
+								{
+									this.props.loginInfo.success && !this.state.isCollect && <Button className="collect_btn" inline size="small" onClick={this.collectTopic.bind(this)}>收藏</Button>
+								}
+								{
+									this.state.isCollect && <Button className="collect_btn" style={{backgroundColor: '#909090'}} inline size="small" onClick={this.deCollectTopic.bind(this)}>取消收藏</Button>
+								}
 							</div>
 						</div>
 						<div className="dc-content">
@@ -139,8 +207,8 @@ class Topic extends Component {
 							</span>
 						</div>
 						{ 
-							replies
-								? replies.map((reply, index)=>{
+							replies &&
+								replies.map((reply, index)=>{
 									return (
 										<div className={ this.setHeightLight(reply) ? 'cell reply_highlight' : 'cell' } key={ reply.id }>
 											<Item 
@@ -155,11 +223,9 @@ class Topic extends Component {
 										  			<span> { getDateDiff(reply.create_at) }</span>
 									  			</a>
 									  			{
-									  				author 
-									  					? author.loginname === reply.author.loginname
-									  						? ( <span className="authorLabel">作者</span> ) 
-									  						: null
-								  						: null
+									  				author &&
+									  					author.loginname === reply.author.loginname &&
+									  						( <span className="authorLabel">作者</span> ) 
 									  			}
 									  			
 											</Item>
@@ -169,10 +235,21 @@ class Topic extends Component {
 										</div>
 									)
 								})
-								: null
 						}
 						<WhiteSpace />
 					</div>
+				</WingBlank>
+				<WingBlank size="sm">
+					<div className="panel">
+						<div className="header">
+							<span className="col_fade">添加回复</span>
+						</div>
+						<div className="inner">
+							<BraftEditor {...editorProps}/>
+							<Button className="collect_btn" inline size="small" onClick={this.replyTopic.bind(this)}>回复</Button>
+						</div>
+					</div>
+					<WhiteSpace />
 				</WingBlank>
 			</div>
 		)

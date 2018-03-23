@@ -2,26 +2,4 @@
 
 .home-content {
 	background-color: #fff;
-	.hc-label {
-		display: inline-block;
-	    padding: 0px 4px;
-	    background-color: #e5e5e5;
-	    color: #999;
-	    border-radius: 5px;
-	    margin-right: 5px;
-	}
-	.heightLight-label {
-	    color: #fff;
-		background-color: var(--baseLightColor);
-	}
-	.am-list-item .am-list-line .am-list-content {
-		font-size: 14px;
-	}
-	.am-list-extra {
-		font-size: 14px !important;
-		flex-basis: 20% !important;
-	}
-	.am-pull-to-refresh-indicator {
-		padding-top: 25px;
-	}
 }

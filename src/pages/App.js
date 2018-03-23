@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import { WingBlank } from 'antd-mobile'
 import Loadable from 'react-loadable'
+import Collections from './collections/Collections'
 import BackToTop from '../components/backToTop/BackToTop'
 import 'antd-mobile/dist/antd-mobile.css'
 import '../assets/css/reset.css'
@@ -15,7 +16,7 @@ const LoadableHome = Loadable({
 })
 
 const LoadableTopic = Loadable({
-    loader: () => import('./topic/Topic'),
+    loader: () => import('../containers/Topic'),
     loading: any => null,
     delay: 300 
 })
@@ -79,6 +80,7 @@ class App extends Component {
                         <Switch>
                             <Route path="/home" component={LoadableHome} />
                             <Route path="/topic/:id" component={LoadableTopic} />
+                            <Route path="/user/:loginname/Collections" component={Collections} />
                             <Route path="/user/:loginname" component={LoadableUser} />
                             <Route path="/login" component={LoadableLogin} />
                             <Redirect from="/" to="/home" />
