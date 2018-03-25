@@ -20,7 +20,6 @@ class Collections extends Component {
 		axios
 			.get(getPath(`topic_collect/${this.props.match.params.loginname}`))
 			.then(({data})=>{
-				console.log(data)
 				this.setState({collectionsList: data.data})
 			})
 	}
@@ -39,7 +38,6 @@ class Collections extends Component {
 	}
 	// 跳转页面
 	changePage(url){
-		console.log(url)
 		return ()=>{
 			this.props.history.push({
 				pathname: url
@@ -49,7 +47,6 @@ class Collections extends Component {
 	render(){
 		let { match } = this.props;
 		let collectionsList = this.state.collectionsList;
-		console.log(match)
 		return (
 			<WingBlank size="sm">
 				<div className="collections">

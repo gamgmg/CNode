@@ -1,43 +1,14 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import { Home, Topic, User, Login, Header, Collections, Messages } from '../utils/loadable'
 import { WingBlank } from 'antd-mobile'
-import Loadable from 'react-loadable'
-import Collections from './collections/Collections'
 import BackToTop from '../components/backToTop/BackToTop'
 import 'antd-mobile/dist/antd-mobile.css'
 import '../assets/css/reset.css'
 import './App.css';
 
-const LoadableHome = Loadable({
-    loader: () => import('./home/Home'),
-    loading: any => null,
-    delay: 300
-})
 
-const LoadableTopic = Loadable({
-    loader: () => import('../containers/Topic'),
-    loading: any => null,
-    delay: 300 
-})
-
-const LoadableUser = Loadable({
-    loader: () => import('./user/User'),
-    loading: any => null,
-    delay: 300
-})
-
-const LoadableLogin = Loadable({
-    loader: () => import('../containers/Login'),
-    loading: any => null,
-    delay: 300
-})
-
-const LoadableHeader = Loadable({
-    loader: () => import('../components/header/Header'),
-    loading: any => null,
-    delay: 300
-})
 
 class App extends Component {
     constructor(props){
@@ -74,17 +45,18 @@ class App extends Component {
                 <div className="app">
                     <BackToTop showBackToTop={this.state.showBackToTop} backToTop={backToTop} />
                     <WingBlank className="app-header" size="sm">
-                    <LoadableHeader />
+                    <Header />
                     </WingBlank>
                     <div className="app-content" ref="content">
                         <Switch>
-                            <Route path="/home" component={LoadableHome} />
-                            <Route path="/topic/:id" component={LoadableTopic} />
+                            <Route path="/home" component={Home} />
+                            <Route path="/topic/:id" component={Topic} />
                             <Route path="/user/:loginname/Collections" component={Collections} />
-                            <Route path="/user/:loginname" component={LoadableUser} />
-                            <Route path="/login" component={LoadableLogin} />
+                            <Route path="/user/:loginname" component={User} />
+                            <Route path="/my/messages" component={Messages} />
+                            <Route path="/login" component={Login} />
                             <Redirect from="/" to="/home" />
-                            <Route component={LoadableHome} />
+                            <Route component={Home} />
                         </Switch>
                     </div>
                 </div>

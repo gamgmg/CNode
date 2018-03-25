@@ -7,6 +7,7 @@ import './Home.css'
 const Item = List.Item
 const Brief = Item.Brief
 
+// 主题列表数据
 let topicsList = []
 
 class Home extends Component {
@@ -16,7 +17,7 @@ class Home extends Component {
 			rowHasChanged: (row1, row2) => row1 !== row2 
 		})
 		this.state = {
-			dataSource: dataSource.cloneWithRows(topicsList),
+			dataSource: dataSource.cloneWithRows(topicsList), //topicsList作为ListView的源数据
 			topicsList: [],
 			page: 1,
 			tab: null,
@@ -166,9 +167,8 @@ class Home extends Component {
 				</div>
 				<div className="home-content">
 					{
-						this.state.dataSource.length !== 0 
-							? this.renderList()
-							: null
+						this.state.dataSource.length !== 0 &&
+							this.renderList()
 					}
 				</div>
 			</WingBlank>

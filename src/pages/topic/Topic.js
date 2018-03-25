@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { NavBar, Icon, WingBlank, WhiteSpace, List, Button } from 'antd-mobile'
-import BraftEditor from 'braft-editor'
+import SimpleMDE from 'react-simplemde-editor'
 import axios from 'axios'
 import getPath from '@/config/api'
 import getDateDiff from '@/utils/timestamp'
 import 'github-markdown-css/github-markdown.css'
-import 'braft-editor/dist/braft.css'
+import 'react-simplemde-editor/demo/dist/stylesheets/vendor.css'
 import './Topic.css'
 
 let Item = List.Item
@@ -43,9 +43,7 @@ class Topic extends Component {
 		axios
 		.get(getPath(`topic_collect/${this.props.loginInfo.loginname}`))
 		.then(({data})=>{
-			data.data.map((value)=>{
-				value.id === this.state.detailData.id && this.setState({isCollect: true})
-			})
+			data.data.map( value => value.id === this.state.detailData.id && this.setState({isCollect: true}) )
 		})
 	}
 	clickBack(){
@@ -121,33 +119,24 @@ class Topic extends Component {
 				data.success && this.setState({isCollect: false})
 			})
 	}
-	handleHTMLChange(data){
-		console.log(data)
+	handleChange(data){
 		this.setState({editorData: data})
 	}
 	replyTopic(){
-		console.log('回复', this.state.editorData)
 		axios
 			.post(getPath(`topic/${this.state.detailData.id}/replies`), {
 				accesstoken: this.props.loginInfo.accessToken,
 				content: this.state.editorData,
 			})
 			.then((res)=>{
-				console.log(res)
+				window.location.reload()
 			})
 	}
 	render(){
 		let { title, top, content, create_at, author, visit_count, tab, replies } = this.state.detailData; 
 
 		const editorProps = {
-	      	height: 0,
-	      	placeholder: '请输入内容',
-	      	onHTMLChange: this.handleHTMLChange.bind(this),
-	      	media: {
-	      		allowPasteImage: true,
-	      		image: true,
-	      	},
-	      	controls: ['bold', 'italic', 'emoji', 'list_ul', 'list_ol', 'blockquote', 'code', 'media']
+			onChange: this.handleChange.bind(this),
 	    }
 
 		return (
@@ -245,7 +234,16 @@ class Topic extends Component {
 							<span className="col_fade">添加回复</span>
 						</div>
 						<div className="inner">
-							<BraftEditor {...editorProps}/>
+							<SimpleMDE  
+								{...editorProps} 
+								options={{
+							    	spellChecker: false,
+							    	styleSelectedText: false,
+							    	renderingConfig: {
+							    		singleLineBreaks: false
+							    	}
+								}}
+							/>
 							<Button className="collect_btn" inline size="small" onClick={this.replyTopic.bind(this)}>回复</Button>
 						</div>
 					</div>
