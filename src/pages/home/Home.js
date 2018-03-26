@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { PullToRefresh, SegmentedControl, WingBlank, List, ListView } from 'antd-mobile'
+import BackToTop from '../../components/backToTop/BackToTop'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 import axios from 'axios'
@@ -26,16 +27,25 @@ class Home extends Component {
 			selectedIndex: 0,
 			loading: false,
 			refreshing: false,
+			showBackToTop: false,
 		}
 	}
 	componentWillMount(){
+		topicsList = [];
 		this.getData();
 	}
 	componentDidMount(){
 		let fixedBall = ReactDOM.findDOMNode(this.refs.fixedBall);
         this.props.loginInfo.success &&
             (fixedBall.style.backgroundImage = `url(${this.props.loginInfo.avatar_url})`);
+
+        let content = document.querySelector('.am-list-view-scrollview');
+        content.addEventListener('scroll', this.handleScroll.bind(this));
 	}
+	componentWillUnmount(){
+        let content = document.querySelector('.am-list-view-scrollview');
+        content.removeEventListener('scroll', this.handleScroll.bind(this));
+    }
 	getData(){
 		this.setState({loading: true, refreshing: true});
 		axios
@@ -51,10 +61,12 @@ class Home extends Component {
 					topicsList = topicsList.concat(data.data);
 					this.setState({
 						topicsList, 
-						loading: false,
 						dataSource: this.state.dataSource.cloneWithRows(topicsList),
-						refreshing: false,
+					},()=>{
+						this.setState({loading: false, refreshing: false})
+						console.log(this.state.dataSource)
 					});
+
 				}
 			})
 			.catch((err)=>{
@@ -63,6 +75,8 @@ class Home extends Component {
 	}
 	// 切换类型
 	segmentChange(e){
+		// 返回顶部
+		document.querySelector('.am-list-view-scrollview').scrollTop = 0;
 		switch(e.nativeEvent.selectedSegmentIndex){
 			case 1:
 				this.setState({tab: 'good'});
@@ -113,6 +127,19 @@ class Home extends Component {
 			})
 		}
 	}
+	handleScroll(){
+        let content = document.querySelector('.am-list-view-scrollview');
+        if(content.scrollTop >= 200){
+            this.setState({ showBackToTop: true })
+        }else {
+            this.setState({ showBackToTop: false })
+        }
+    }
+	backToTop(){
+        let content = document.querySelector('.am-list-view-scrollview');
+        content.scrollTop = 0;
+        this.setState({ showBackToTop: false });
+    }
 	renderList(){
 		const row = (rowData, sectionID, rowID) => {
 			return (
@@ -144,8 +171,8 @@ class Home extends Component {
 			        </div>
 				)}
 				renderRow={row}
-				pageSize={4}
-				scrollRenderAheadDistance={200}
+				pageSize={20}
+				scrollRenderAheadDistance={500}
 		        scrollEventThrottle={20}
 		        onEndReachedThreshold={10}
 				pullToRefresh={
@@ -167,6 +194,7 @@ class Home extends Component {
 		)
 	}
 	render() {
+		let backToTop = this.backToTop.bind(this);
 		return (
 			<WingBlank size="sm" className="home">
 				{
@@ -183,6 +211,7 @@ class Home extends Component {
 							this.renderList()
 					}
 				</div>
+				<BackToTop showBackToTop={this.state.showBackToTop} backToTop={backToTop} />
 			</WingBlank>
 		)
 	}

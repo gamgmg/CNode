@@ -23,7 +23,7 @@ class Topic extends Component {
 	}
 	componentDidMount(){
 		this.getData();
-		this.markAllMessage();	
+		this.props.loginInfo.success && this.markAllMessage();	
 	}
 	getData(){
 		axios
@@ -229,29 +229,34 @@ class Topic extends Component {
 						<WhiteSpace />
 					</div>
 				</WingBlank>
-				<WingBlank size="sm">
-					<div className="panel">
-						<div className="header">
-							<span className="col_fade">添加回复</span>
-						</div>
-						<div className="inner">
-							<SimpleMDE  
-								onChange={value => this.setState({content: value})}
-								value={this.state.content}
-								options={{
-									placeholder: '请输入内容',
-							    	spellChecker: false,
-							    	styleSelectedText: false,
-							    	renderingConfig: {
-							    		singleLineBreaks: false
-							    	}
-								}}
-							/>
-							<Button className="collect_btn" inline size="small" onClick={this.replyTopic.bind(this)}>回复</Button>
-						</div>
-					</div>
-					<WhiteSpace />
-				</WingBlank>
+				{
+					this.props.loginInfo.success &&
+						(
+							<WingBlank size="sm">
+								<div className="panel">
+									<div className="header">
+										<span className="col_fade">添加回复</span>
+									</div>
+									<div className="inner">
+										<SimpleMDE  
+											onChange={value => this.setState({content: value})}
+											value={this.state.content}
+											options={{
+												placeholder: '请输入内容',
+										    	spellChecker: false,
+										    	styleSelectedText: false,
+										    	renderingConfig: {
+										    		singleLineBreaks: false
+										    	}
+											}}
+										/>
+										<Button className="collect_btn" inline size="small" onClick={this.replyTopic.bind(this)}>回复</Button>
+									</div>
+								</div>
+								<WhiteSpace />
+							</WingBlank>
+						)
+				}
 			</div>
 		)
 	}

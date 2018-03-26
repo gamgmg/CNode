@@ -16,7 +16,6 @@ class Login extends Component {
 	// 跳转页面
 	changePage(url){
 		return ()=>{
-			console.log(url)
 			this.props.history.push({
 				pathname: url
 			})
@@ -40,10 +39,6 @@ class Login extends Component {
 					})
 				}
 			})
-			// .catch((err)=>{
-			// 	this.setState({disabled: false,loading: false})
-			// 	Toast.info('accessToken错误');
-			// })
 	}
 	render(){
 		return (

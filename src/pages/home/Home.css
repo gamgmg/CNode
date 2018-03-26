@@ -9,7 +9,7 @@
 	    height: 50px;
 	    z-index: 10;
 	    border-radius: 50%;
-	    border: 2px solid #ff5b05;
+	    border: 2px solid var(--baseLightColor);
 	    background-size: 100%;
 	}
 	& .home-content {

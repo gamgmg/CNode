@@ -49,7 +49,7 @@ class Header extends Component {
 					      			}
 					      			<NavLink to="/my/messages">未读消息</NavLink>
 				      			</div> 
-					      		<div onClick={ ()=>initLoginInfo() }>退出</div>
+					      		<div><a onClick={()=>initLoginInfo()}>退出</a></div>
 					    	</div>
 					  	)
 					  	: (
