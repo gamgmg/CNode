@@ -1,7 +1,7 @@
 import Loadable from 'react-loadable'
 
 export const Home = Loadable({
-    loader: () => import('../pages/home/Home'),
+    loader: () => import('../containers/Home'),
     loading: any => null,
     delay: 300
 })
@@ -13,7 +13,7 @@ export const Topic = Loadable({
 })
 
 export const User = Loadable({
-    loader: () => import('../pages/user/User'),
+    loader: () => import('../containers/User'),
     loading: any => null,
     delay: 300
 })
@@ -37,7 +37,13 @@ export const Collections = Loadable({
 })
 
 export const Messages = Loadable({
-    loader: () => import('../pages/messages/Messages'),
+    loader: () => import('../containers/Messages'),
+    loading: any => null,
+    delay: 300
+})
+
+export const Release = Loadable({
+    loader: () => import('../pages/release/Release'),
     loading: any => null,
     delay: 300
 })

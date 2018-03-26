@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
-import { Home, Topic, User, Login, Header, Collections, Messages } from '../utils/loadable'
+import { Home, Topic, User, Login, Header, Collections, Messages, Release } from '../utils/loadable'
 import { WingBlank } from 'antd-mobile'
 import BackToTop from '../components/backToTop/BackToTop'
 import 'antd-mobile/dist/antd-mobile.css'
 import '../assets/css/reset.css'
 import './App.css';
-
-
 
 class App extends Component {
     constructor(props){
@@ -17,16 +15,16 @@ class App extends Component {
             showBackToTop: false
         }
     }
-    componentDidMount(){
-        let content = ReactDOM.findDOMNode(this.refs.content)
-        content.addEventListener('scroll', this.handleScroll.bind(this));
-    }
     componentWillUnmount(){
-        let content = ReactDOM.findDOMNode(this.refs.content)
+        let content = ReactDOM.findDOMNode(this.refs.content);
         content.removeEventListener('scroll', this.handleScroll.bind(this));
     }
+    componentDidMount(){
+        let content = ReactDOM.findDOMNode(this.refs.content);
+        content.addEventListener('scroll', this.handleScroll.bind(this));
+    }
     handleScroll(){
-        let content = ReactDOM.findDOMNode(this.refs.content)
+        let content = ReactDOM.findDOMNode(this.refs.content);
         if(content.scrollTop >= 200){
             this.setState({ showBackToTop: true })
         }else {
@@ -34,9 +32,9 @@ class App extends Component {
         }
     }
     backToTop(){
-        let content = ReactDOM.findDOMNode(this.refs.content)
+        let content = ReactDOM.findDOMNode(this.refs.content);
         content.scrollTop = 0;
-        this.setState({ showBackToTop: false })
+        this.setState({ showBackToTop: false });
     }
     render() {
         let backToTop = this.backToTop.bind(this);
@@ -54,6 +52,7 @@ class App extends Component {
                             <Route path="/user/:loginname/Collections" component={Collections} />
                             <Route path="/user/:loginname" component={User} />
                             <Route path="/my/messages" component={Messages} />
+                            <Route path="/release" component={Release} />
                             <Route path="/login" component={Login} />
                             <Redirect from="/" to="/home" />
                             <Route component={Home} />

@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { NavBar, Icon, WingBlank, WhiteSpace, List, Button } from 'antd-mobile'
 import SimpleMDE from 'react-simplemde-editor'
+import moment from 'moment'
+import 'moment/locale/zh-cn'
 import axios from 'axios'
 import getPath from '@/config/api'
-import getDateDiff from '@/utils/timestamp'
 import 'github-markdown-css/github-markdown.css'
 import 'react-simplemde-editor/demo/dist/stylesheets/vendor.css'
 import './Topic.css'
@@ -17,11 +18,12 @@ class Topic extends Component {
 			detailData: Object.create(null),
 			topThreeList: [],
 			isCollect: false,
-			editorData: ''
+			content: ''
 		}
 	}
 	componentDidMount(){
-		this.getData();		
+		this.getData();
+		this.markAllMessage();	
 	}
 	getData(){
 		axios
@@ -38,13 +40,20 @@ class Topic extends Component {
 				}
 			})
 	}
+	// 标记全部已读
+	markAllMessage(){
+		axios
+			.post(getPath('message/mark_all'), {
+				accesstoken: this.props.loginInfo.accessToken
+			})
+	}
 	// 获取用户收藏的主题
 	getTopicCollects(){
 		axios
-		.get(getPath(`topic_collect/${this.props.loginInfo.loginname}`))
-		.then(({data})=>{
-			data.data.map( value => value.id === this.state.detailData.id && this.setState({isCollect: true}) )
-		})
+			.get(getPath(`topic_collect/${this.props.loginInfo.loginname}`))
+			.then(({data})=>{
+				data.data.map( value => value.id === this.state.detailData.id && this.setState({isCollect: true}) )
+			})
 	}
 	clickBack(){
 		window.history.back();
@@ -119,14 +128,11 @@ class Topic extends Component {
 				data.success && this.setState({isCollect: false})
 			})
 	}
-	handleChange(data){
-		this.setState({editorData: data})
-	}
 	replyTopic(){
 		axios
 			.post(getPath(`topic/${this.state.detailData.id}/replies`), {
 				accesstoken: this.props.loginInfo.accessToken,
-				content: this.state.editorData,
+				content: this.state.content,
 			})
 			.then((res)=>{
 				window.location.reload()
@@ -134,11 +140,6 @@ class Topic extends Component {
 	}
 	render(){
 		let { title, top, content, create_at, author, visit_count, tab, replies } = this.state.detailData; 
-
-		const editorProps = {
-			onChange: this.handleChange.bind(this),
-	    }
-
 		return (
 			<div className="detail">
 				<WingBlank size="sm">
@@ -161,7 +162,7 @@ class Topic extends Component {
 								{ title }
 							</h1>
 							<div className="dc-header-info">
-								<span>发布于{ getDateDiff(create_at) }</span>
+								<span>发布于{ moment(create_at).fromNow() }</span>
 								{
 									author && ( <span onClick={this.goToUserPage(`/user/${author.loginname}`)}>作者 { author.loginname }</span> )
 										
@@ -209,7 +210,7 @@ class Topic extends Component {
 										  		<span onClick={this.goToUserPage(`/user/${reply.author.loginname}`)}>{ reply.author.loginname }</span>
 										  		<a>
 										  			<span> { ++index }楼</span>
-										  			<span> { getDateDiff(reply.create_at) }</span>
+										  			<span> { moment(reply.create_at).fromNow() }</span>
 									  			</a>
 									  			{
 									  				author &&
@@ -235,8 +236,10 @@ class Topic extends Component {
 						</div>
 						<div className="inner">
 							<SimpleMDE  
-								{...editorProps} 
+								onChange={value => this.setState({content: value})}
+								value={this.state.content}
 								options={{
+									placeholder: '请输入内容',
 							    	spellChecker: false,
 							    	styleSelectedText: false,
 							    	renderingConfig: {

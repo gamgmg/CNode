@@ -179,3 +179,18 @@ ul.unstyled {
     min-height: 200px;
     max-height: 1340px;
 }
+
+.am-list-item .am-list-line-wrap .am-list-extra {
+    white-space: nowrap;
+}
+
+.topics_btn {
+    float: right;
+    color: #fff !important;
+}
+
+.collect_btn {
+    background-color: var(--baseLightColor);
+    color: #fff !important;
+    margin-top: 10px;
+}

@@ -47,7 +47,7 @@ class Header extends Component {
 					      					? ( <span className="big messages_count">{ this.state.messageCount }</span> )
 					      					: null
 					      			}
-					      			未读消息
+					      			<NavLink to="/my/messages">未读消息</NavLink>
 				      			</div> 
 					      		<div onClick={ ()=>initLoginInfo() }>退出</div>
 					    	</div>

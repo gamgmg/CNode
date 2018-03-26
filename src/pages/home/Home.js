@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import { PullToRefresh, SegmentedControl, WingBlank, List, ListView } from 'antd-mobile'
+import moment from 'moment'
+import 'moment/locale/zh-cn'
 import axios from 'axios'
 import getPath from '@/config/api'
-import getDateDiff from '@/utils/timestamp'
 import './Home.css'
 const Item = List.Item
 const Brief = Item.Brief
@@ -28,6 +30,11 @@ class Home extends Component {
 	}
 	componentWillMount(){
 		this.getData();
+	}
+	componentDidMount(){
+		let fixedBall = ReactDOM.findDOMNode(this.refs.fixedBall);
+        this.props.loginInfo.success &&
+            (fixedBall.style.backgroundImage = `url(${this.props.loginInfo.avatar_url})`);
 	}
 	getData(){
 		this.setState({loading: true, refreshing: true});
@@ -99,7 +106,7 @@ class Home extends Component {
 				: tabsList[tab];
 	}
 	// 跳转到详情页
-	goToDetailPage(url){
+	changePage(url){
 		return ()=>{
 			this.props.history.push({
 				pathname: url
@@ -111,12 +118,12 @@ class Home extends Component {
 			return (
 				<Item 
 					key={rowID}
-					extra={getDateDiff(rowData.last_reply_at)} 
+					extra={moment(rowData.last_reply_at).fromNow()} 
 					align="middle" 
 					thumb={rowData.author.avatar_url}
 					multipleLine
 					wrap={true}
-					onClick={this.goToDetailPage(`/topic/${rowData.id}`)}
+					onClick={this.changePage(`/topic/${rowData.id}`)}
 				>
 			  		<span className={(rowData.top || rowData.good) ? 'hc-label heightLight-label' : 'hc-label'}>{this.getTab(rowData.tab, rowData.top, rowData.good)}</span>
 			  		{rowData.title}
@@ -161,7 +168,12 @@ class Home extends Component {
 	}
 	render() {
 		return (
-			<WingBlank size="sm" className="home">					
+			<WingBlank size="sm" className="home">
+				{
+					this.props.loginInfo.success &&
+					 (<div className="fixedBall" ref="fixedBall" onClick={ this.changePage(`/user/${this.props.loginInfo.loginname}`) }></div>)
+				}
+
 				<div className="home-segment">
 					<SegmentedControl selectedIndex={this.state.selectedIndex} values={['全部', '精华', '分享', '问答', '招聘', '测试']} onChange={this.segmentChange.bind(this)}/>
 				</div>

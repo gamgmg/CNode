@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { WingBlank, WhiteSpace, List } from 'antd-mobile'
+import moment from 'moment'
+import 'moment/locale/zh-cn'
 import axios from 'axios'
 import getPath from '@/config/api'
-import getDateDiff from '@/utils/timestamp'
 
 const Item = List.Item
 
@@ -70,7 +71,7 @@ class Collections extends Component {
 										return (
 											<Item 
 												key={index}
-												extra={getDateDiff(list.last_reply_at)} 
+												extra={moment(list.last_reply_at).fromNow()} 
 												align="middle" 
 												thumb={list.author.avatar_url}
 												multipleLine

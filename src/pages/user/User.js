@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { WingBlank, WhiteSpace, List } from 'antd-mobile'
+import { WingBlank, WhiteSpace, List, Button } from 'antd-mobile'
+import moment from 'moment'
+import 'moment/locale/zh-cn'
 import axios from 'axios'
 import getPath from '@/config/api'
-import getDateDiff from '@/utils/timestamp'
-
 const Item = List.Item
 
 class User extends Component {
@@ -32,7 +32,8 @@ class User extends Component {
 			ask: '问答',
 			share: '分享',
 			job: '招聘',
-			good: '精华'
+			good: '精华',
+			dev: '测试',
 		}
 		return top 
 			? '置顶' 
@@ -71,6 +72,10 @@ class User extends Component {
 							<a className="dark">{ loginname }</a>
 							<div className="user_profile">
 								<ul className="unstyled">
+									{
+										this.props.loginInfo.success &&
+											(<Button className="topics_btn" style={{backgroundColor: '#80bd01'}} inline size="small" onClick={ this.changePage('/release') }>发布话题</Button>)
+									}
 									<span className="big">{ score } </span>积分
 									<li>
 										<a className="dark">
@@ -79,7 +84,7 @@ class User extends Component {
 									</li>
 								</ul>
 							</div>
-							<p className="col_fade">注册时间 {getDateDiff(create_at)}</p>
+							<p className="col_fade">注册时间 {moment(create_at).fromNow()}</p>
 						</div>
 					</div>
 					<div className="panel">
@@ -93,7 +98,7 @@ class User extends Component {
 										return (
 											<Item 
 												key={index}
-												extra={getDateDiff(list.last_reply_at)} 
+												extra={moment(list.last_reply_at).fromNow()} 
 												align="middle" 
 												thumb={list.author.avatar_url}
 												multipleLine
@@ -121,7 +126,7 @@ class User extends Component {
 										return (
 											<Item 
 												key={index}
-												extra={getDateDiff(list.last_reply_at)} 
+												extra={moment(list.last_reply_at).fromNow()} 
 												align="middle" 
 												thumb={list.author.avatar_url}
 												multipleLine
