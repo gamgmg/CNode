@@ -43,7 +43,7 @@ export const Messages = Loadable({
 })
 
 export const Release = Loadable({
-    loader: () => import('../pages/release/Release'),
+    loader: () => import('../containers/Release'),
     loading: any => null,
     delay: 300
 })

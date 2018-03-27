@@ -1,4 +1,6 @@
 @import '../assets/css/common.css';
+@import '../assets/css/icomoon/font-face.css';
+
 .app {
   width: 100%;
   height: 100%;

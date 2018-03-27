@@ -97,4 +97,7 @@
 			background-color: #f4fcf0;
 		}
 	}
+	& .ups {
+		color: var(--baseLightColor);
+	}
 }

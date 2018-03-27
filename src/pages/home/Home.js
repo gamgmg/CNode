@@ -64,7 +64,6 @@ class Home extends Component {
 						dataSource: this.state.dataSource.cloneWithRows(topicsList),
 					},()=>{
 						this.setState({loading: false, refreshing: false})
-						console.log(this.state.dataSource)
 					});
 
 				}

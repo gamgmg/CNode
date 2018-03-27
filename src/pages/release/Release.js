@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
-import { WingBlank, WhiteSpace, List, Button, Picker, InputItem } from 'antd-mobile'
+import { WingBlank, WhiteSpace, List, Button, Picker, InputItem, Toast } from 'antd-mobile'
+import axios from 'axios'
+import getPath from '@/config/api'
 import SimpleMDE from 'react-simplemde-editor'
 import 'github-markdown-css/github-markdown.css'
 import 'react-simplemde-editor/demo/dist/stylesheets/vendor.css'
 
+// 板块数据
 let district = [{
 	value: 'dev',
 	label: '测试'
@@ -18,6 +21,23 @@ class Release extends Component {
 			content: '',
 		}
 	}
+	componentWillMount(){
+		this.props.match.path.includes('edit') && this.getData();
+	}
+	getData(){
+		axios
+			.get(getPath(`topic/${this.props.match.params.id}`), {params: {mdrender: false}})
+			.then(({ data })=>{
+				if(data.success){
+					this.setState({
+						tab: [data.data.tab],
+						title: data.data.title,
+						content: data.data.content
+					})
+					
+				}
+			})
+	}
 	// 跳转页面
 	changePage(url){
 		return ()=>{
@@ -26,15 +46,49 @@ class Release extends Component {
 			})
 		}
 	}
+	// 发布话题
 	releaseTopic(){
-		console.log('tab',this.state.tab[0])
-		console.log('title',this.state.title)
-		console.log('content',this.state.content)
-		!this.state.tab && console.log('模板不能为空')
-		!this.state.content && console.log('内容不能为空')
-		!this.state.title 
-			? console.log('标题不能为空')
-			: this.state.title.length < 10 && console.log('标题字数不能少于10字节')
+		if(!this.state.tab[0]) {
+			Toast.info('模板不能为空', 1);
+			return;
+		}
+		if(!this.state.content) {
+			Toast.info('内容不能为空', 1);
+			return;
+		}
+		if(!this.state.title) { 
+			Toast.info('标题不能为空', 1);
+			return;
+		}
+		if(this.state.title.length < 10) {
+			Toast.info('标题字数不能少于10个字', 1);
+			return;
+		}
+		if(this.props.match.path.includes('edit')){
+			axios
+				.post(getPath('topics/update'), {
+					accesstoken: this.props.loginInfo.accessToken,
+					topic_id: this.props.match.params.id,
+					title: this.state.title,
+					tab: this.state.tab[0],
+					content: this.state.content
+				})
+				.then(({data})=>{
+					data.success && this.props.history.push({pathname: '/'})
+				})
+		}else{
+			axios
+				.post(getPath('topics'), {
+					accesstoken: this.props.loginInfo.accessToken,
+					title: this.state.title,
+					tab: this.state.tab[0],
+					content: this.state.content
+				})
+				.then(({data})=>{
+					data.success && this.props.history.push({pathname: '/'})
+				})
+		}
+		
 	}
 	render(){
 		return (
@@ -66,6 +120,7 @@ class Release extends Component {
 					        <InputItem 
 								placeholder="标题字数 10字以上"
 								onChange={(value)=>this.setState({title: value})}
+								value={this.state.title}
 							></InputItem>
 							<WhiteSpace />
 							<SimpleMDE  

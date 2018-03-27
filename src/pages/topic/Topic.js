@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import { NavBar, Icon, WingBlank, WhiteSpace, List, Button } from 'antd-mobile'
 import SimpleMDE from 'react-simplemde-editor'
 import moment from 'moment'
@@ -18,7 +19,8 @@ class Topic extends Component {
 			detailData: Object.create(null),
 			topThreeList: [],
 			isCollect: false,
-			content: ''
+			content: '',
+			upsStatus: 'down'
 		}
 	}
 	componentDidMount(){
@@ -138,18 +140,53 @@ class Topic extends Component {
 				window.location.reload()
 			})
 	}
+	// 编辑主题
+	updateTopic(){
+		this.props.history.push({
+			pathname: `/Topic/${this.state.detailData.id}/edit`
+		})
+	}
+	// 为评论点赞
+	replyUps(replyId, index){
+		axios
+		.post(getPath(`/reply/${replyId}/ups`), {
+			accesstoken: this.props.loginInfo.accessToken
+		})
+		.then(({data})=>{
+			if(data.success){
+				let detailData = this.state.detailData;
+				switch(data.action){
+					case 'down':
+						detailData.replies[index].ups.pop();
+						this.setState({upsStatus: 'down'});
+						break;
+					default:
+						this.state.detailData.replies[index].ups.push(this.props.loginInfo.id);
+						this.setState({upsStatus: 'up'});
+						break;
+				}
+				this.setState({detailData})
+			}
+		})
+	}
+	// 回复另一个评论
+	replyToReply(loginname){
+		this.setState({content: `@${loginname}`});
+		let topic = ReactDOM.findDOMNode(this.refs.topic);
+		let addReply = ReactDOM.findDOMNode(this.refs.addReply);
+		topic.scrollTop = addReply.offsetTop;	
+	}
 	render(){
-		let { title, top, content, create_at, author, visit_count, tab, replies } = this.state.detailData; 
+		let { title, top, content, create_at, author, author_id, visit_count, tab, replies } = this.state.detailData; 
+		let { loginInfo } = this.props;
 		return (
-			<div className="detail">
+			<div className="detail" ref="topic">
 				<WingBlank size="sm">
 					<NavBar
 						mode="light"
 						icon={<Icon type="left"/>}
 						onLeftClick={this.clickBack}
-					>
-						详情
-					</NavBar>
+					>详情</NavBar>
 				</WingBlank>
 				<WhiteSpace />
 				<WingBlank size="sm">
@@ -157,7 +194,8 @@ class Topic extends Component {
 						<div className="dc-header">
 							<h1>
 								{
-									top && ( <span className="dc-header-label">置顶</span> ) 
+									top && 
+										( <span className="dc-header-label">置顶</span> )
 								}
 								{ title }
 							</h1>
@@ -165,13 +203,16 @@ class Topic extends Component {
 								<span>发布于{ moment(create_at).fromNow() }</span>
 								{
 									author && ( <span onClick={this.goToUserPage(`/user/${author.loginname}`)}>作者 { author.loginname }</span> )
-										
 								}
 								<span>{ visit_count }次浏览</span>
 								<span>来自 { this.fromTo(tab) }</span>
 								<br />
 								{
-									this.props.loginInfo.success && !this.state.isCollect && <Button className="collect_btn" inline size="small" onClick={this.collectTopic.bind(this)}>收藏</Button>
+									loginInfo.success && author && loginInfo.loginname === author.loginname && <b className="icon-edit" onClick={this.updateTopic.bind(this)}></b>
+								}
+								<b style={{marginRight: '10px'}}></b>
+								{
+									loginInfo.success && !this.state.isCollect && <Button className="collect_btn" inline size="small" onClick={this.collectTopic.bind(this)}>收藏</Button>
 								}
 								{
 									this.state.isCollect && <Button className="collect_btn" style={{backgroundColor: '#909090'}} inline size="small" onClick={this.deCollectTopic.bind(this)}>取消收藏</Button>
@@ -203,7 +244,13 @@ class Topic extends Component {
 										<div className={ this.setHeightLight(reply) ? 'cell reply_highlight' : 'cell' } key={ reply.id }>
 											<Item 
 												key={index}
-												extra={reply.ups.length} 
+												extra={
+													<div>
+														<span className={reply.ups.includes(author_id) ? 'icon-good-filling ups' : 'icon-good-filling'} onClick={this.replyUps.bind(this, reply.id, index)}></span>
+														<span> {reply.ups.length} </span>
+														<span className="icon-undo2" onClick={this.replyToReply.bind(this, reply.author.loginname)}></span>
+													</div>
+												} 
 												align="middle" 
 												thumb={reply.author.avatar_url}
 											>
@@ -232,7 +279,7 @@ class Topic extends Component {
 				{
 					this.props.loginInfo.success &&
 						(
-							<WingBlank size="sm">
+							<WingBlank size="sm" className="addReply" ref="addReply">
 								<div className="panel">
 									<div className="header">
 										<span className="col_fade">添加回复</span>

@@ -48,6 +48,7 @@ class App extends Component {
                     <div className="app-content" ref="content">
                         <Switch>
                             <Route path="/home" component={Home} />
+                            <Route path="/topic/:id/edit" component={Release} />
                             <Route path="/topic/:id" component={Topic} />
                             <Route path="/user/:loginname/Collections" component={Collections} />
                             <Route path="/user/:loginname" component={User} />

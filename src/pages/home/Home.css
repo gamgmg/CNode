@@ -1,5 +1,3 @@
-@import '../../assets/css/common.css';
-
 .home {
 	& .fixedBall {
 	    position: fixed;
