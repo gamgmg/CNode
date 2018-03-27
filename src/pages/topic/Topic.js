@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { NavBar, Icon, WingBlank, WhiteSpace, List, Button } from 'antd-mobile'
+import { NavBar, Icon, WingBlank, WhiteSpace, List, Button, Toast } from 'antd-mobile'
 import SimpleMDE from 'react-simplemde-editor'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
@@ -16,7 +16,7 @@ class Topic extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			detailData: Object.create(null),
+			topicData: Object.create(null),
 			topThreeList: [],
 			isCollect: false,
 			content: '',
@@ -33,7 +33,7 @@ class Topic extends Component {
 			.then(({ data })=>{
 				if(data.success){
 					this.setState({
-						detailData: data.data
+						topicData: data.data
 					}, ()=>{
 						data.data.replies && this.getTopThreeList(data.data.replies);
 						this.props.loginInfo.loginname && this.getTopicCollects();
@@ -54,7 +54,7 @@ class Topic extends Component {
 		axios
 			.get(getPath(`topic_collect/${this.props.loginInfo.loginname}`))
 			.then(({data})=>{
-				data.data.map( value => value.id === this.state.detailData.id && this.setState({isCollect: true}) )
+				data.data.map( value => value.id === this.state.topicData.id && this.setState({isCollect: true}) )
 			})
 	}
 	clickBack(){
@@ -113,7 +113,7 @@ class Topic extends Component {
 		axios
 			.post(getPath('topic_collect/collect'), {
 				accesstoken: this.props.loginInfo.accessToken,
-				topic_id: this.state.detailData.id
+				topic_id: this.state.topicData.id
 			})
 			.then(({data})=>{
 				data.success && this.setState({isCollect: true})
@@ -124,15 +124,16 @@ class Topic extends Component {
 		axios
 			.post(getPath('topic_collect/de_collect'), {
 				accesstoken: this.props.loginInfo.accessToken,
-				topic_id: this.state.detailData.id
+				topic_id: this.state.topicData.id
 			})
 			.then(({data})=>{
 				data.success && this.setState({isCollect: false})
 			})
 	}
+	// 回复主题
 	replyTopic(){
 		axios
-			.post(getPath(`topic/${this.state.detailData.id}/replies`), {
+			.post(getPath(`topic/${this.state.topicData.id}/replies`), {
 				accesstoken: this.props.loginInfo.accessToken,
 				content: this.state.content,
 			})
@@ -143,29 +144,34 @@ class Topic extends Component {
 	// 编辑主题
 	updateTopic(){
 		this.props.history.push({
-			pathname: `/Topic/${this.state.detailData.id}/edit`
+			pathname: `/Topic/${this.state.topicData.id}/edit`
 		})
 	}
 	// 为评论点赞
 	replyUps(replyId, index){
+		if(!this.props.loginInfo.success) {
+			Toast.info('请先登录，登陆后即可点赞。');
+			return;
+		}
+
 		axios
 		.post(getPath(`/reply/${replyId}/ups`), {
 			accesstoken: this.props.loginInfo.accessToken
 		})
 		.then(({data})=>{
 			if(data.success){
-				let detailData = this.state.detailData;
+				let topicData = this.state.topicData;
 				switch(data.action){
 					case 'down':
-						detailData.replies[index].ups.pop();
+						topicData.replies[index].ups.pop();
 						this.setState({upsStatus: 'down'});
 						break;
 					default:
-						this.state.detailData.replies[index].ups.push(this.props.loginInfo.id);
+						this.state.topicData.replies[index].ups.push(this.props.loginInfo.id);
 						this.setState({upsStatus: 'up'});
 						break;
 				}
-				this.setState({detailData})
+				this.setState({topicData})
 			}
 		})
 	}
@@ -177,10 +183,10 @@ class Topic extends Component {
 		topic.scrollTop = addReply.offsetTop;	
 	}
 	render(){
-		let { title, top, content, create_at, author, author_id, visit_count, tab, replies } = this.state.detailData; 
+		let { title, top, content, create_at, author, visit_count, tab, replies } = this.state.topicData; 
 		let { loginInfo } = this.props;
 		return (
-			<div className="detail" ref="topic">
+			<div className="topic" ref="topic">
 				<WingBlank size="sm">
 					<NavBar
 						mode="light"
@@ -190,36 +196,36 @@ class Topic extends Component {
 				</WingBlank>
 				<WhiteSpace />
 				<WingBlank size="sm">
-					<div className="detail-topic-container">
-						<div className="dc-header">
-							<h1>
+					<div className="panel">
+						<div className="header topic_header">
+							<span className="topic_full_title">
 								{
 									top && 
 										( <span className="dc-header-label">置顶</span> )
 								}
 								{ title }
-							</h1>
-							<div className="dc-header-info">
-								<span>发布于{ moment(create_at).fromNow() }</span>
+							</span>
+							<div className="changes">
+								<span>发布于 { moment(create_at).fromNow() }</span>
 								{
 									author && ( <span onClick={this.goToUserPage(`/user/${author.loginname}`)}>作者 { author.loginname }</span> )
 								}
-								<span>{ visit_count }次浏览</span>
+								<span>{ visit_count } 次浏览</span>
 								<span>来自 { this.fromTo(tab) }</span>
-								<br />
+								{
+									loginInfo.success && !this.state.isCollect && <Button className="collect_btn pull-right" inline size="small" onClick={this.collectTopic.bind(this)}>收藏</Button>
+								}
+								{
+									this.state.isCollect && <Button className="collect_btn pull-right" style={{backgroundColor: '#909090'}} inline size="small" onClick={this.deCollectTopic.bind(this)}>取消收藏</Button>
+								}
+							</div>
+							<div className="manage_topic">
 								{
 									loginInfo.success && author && loginInfo.loginname === author.loginname && <b className="icon-edit" onClick={this.updateTopic.bind(this)}></b>
 								}
-								<b style={{marginRight: '10px'}}></b>
-								{
-									loginInfo.success && !this.state.isCollect && <Button className="collect_btn" inline size="small" onClick={this.collectTopic.bind(this)}>收藏</Button>
-								}
-								{
-									this.state.isCollect && <Button className="collect_btn" style={{backgroundColor: '#909090'}} inline size="small" onClick={this.deCollectTopic.bind(this)}>取消收藏</Button>
-								}
 							</div>
 						</div>
-						<div className="dc-content">
+						<div className="inner inner_topic">
 							<div className="dc-topic-content">
 								<div dangerouslySetInnerHTML={{__html: this.escape(content?`${content}`:'')}} />
 							</div>
@@ -227,8 +233,8 @@ class Topic extends Component {
 					</div>
 				</WingBlank>
 				<WingBlank size="sm">
-					<div className="detail-reply-container">
-						<div className="dc-reply-header">
+					<div className="panel">
+						<div className="header">
 							<span>
 								{ 
 									replies 
@@ -246,9 +252,12 @@ class Topic extends Component {
 												key={index}
 												extra={
 													<div>
-														<span className={reply.ups.includes(author_id) ? 'icon-good-filling ups' : 'icon-good-filling'} onClick={this.replyUps.bind(this, reply.id, index)}></span>
+														<span className={reply.ups.includes(loginInfo.id) ? 'icon-good-filling ups' : 'icon-good-filling'} onClick={this.replyUps.bind(this, reply.id, index)}></span>
 														<span> {reply.ups.length} </span>
-														<span className="icon-undo2" onClick={this.replyToReply.bind(this, reply.author.loginname)}></span>
+														{
+															loginInfo.success &&
+																(<span className="icon-undo2" onClick={this.replyToReply.bind(this, reply.author.loginname)}></span>)
+														}
 													</div>
 												} 
 												align="middle" 
@@ -267,7 +276,7 @@ class Topic extends Component {
 									  			
 											</Item>
 											<div className="dc-reply-content">												
-												<div className="markdown-body" dangerouslySetInnerHTML={{__html: this.escape(reply.content?`${reply.content}`:'')}} />
+												<div dangerouslySetInnerHTML={{__html: this.escape(reply.content?`${reply.content}`:'')}} />
 											</div>
 										</div>
 									)
@@ -277,7 +286,7 @@ class Topic extends Component {
 					</div>
 				</WingBlank>
 				{
-					this.props.loginInfo.success &&
+					loginInfo.success &&
 						(
 							<WingBlank size="sm" className="addReply" ref="addReply">
 								<div className="panel">

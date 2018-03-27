@@ -29,7 +29,8 @@ class Collections extends Component {
 			ask: '问答',
 			share: '分享',
 			job: '招聘',
-			good: '精华'
+			good: '精华',
+			dev: '测试'
 		}
 		return top 
 			? '置顶' 

@@ -25,7 +25,7 @@ export const Login = Loadable({
 })
 
 export const Header = Loadable({
-    loader: () => import('../components/header/Header'),
+    loader: () => import('../containers/Header'),
     loading: any => null,
     delay: 300
 })

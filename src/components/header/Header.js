@@ -43,9 +43,8 @@ class Header extends Component {
 					      
 					      		<div>
 					      			{  
-					      				this.state.messageCount
-					      					? ( <span className="big messages_count">{ this.state.messageCount }</span> )
-					      					: null
+					      				this.state.messageCount.length > 0 &&
+					      					( <span className="big messages_count">{ this.state.messageCount }</span> )
 					      			}
 					      			<NavLink to="/my/messages">未读消息</NavLink>
 				      			</div> 

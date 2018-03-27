@@ -5,7 +5,6 @@ import { Home, Topic, User, Login, Header, Collections, Messages, Release } from
 import { WingBlank } from 'antd-mobile'
 // import BackToTop from '../components/backToTop/BackToTop'
 import 'antd-mobile/dist/antd-mobile.css'
-import '../assets/css/reset.css'
 import './App.css';
 
 class App extends Component {

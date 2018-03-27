@@ -1,5 +1,230 @@
+@import '../assets/css/reset.css';
 @import '../assets/css/common.css';
 @import '../assets/css/icomoon/font-face.css';
+
+.panel {
+  & .header {
+    padding: 10px;
+      background-color: #f6f6f6;
+      border-radius: 3px 3px 0 0;
+      & .col_fade {
+        color: #444;
+      }
+  }
+    & .topic_header {
+        background-color: #fff;
+    }
+  & .cell {
+    padding-right: 10px;
+      background-color: #fff;
+      border-top: 1px solid #f0f0f0;
+  }
+  & .inner {
+    padding: 10px;
+      border-radius: 0 0 3px 3px;
+      line-height: 2em;
+      background-color: #fff;
+      &.userinfo {
+        padding: 10px;
+        border-top: 1px solid #e5e5e5;
+      }
+      & a {
+        color: #778087;
+      }
+      & li {
+        line-height: 2em;
+      }
+        &.inner_topic {
+            padding: 10px;
+            border-top: 1px solid #e5e5e5;
+        }
+    }
+}
+
+.cell {
+    position: relative;
+    padding: 10px 0 10px 10px;
+    font-size: 14px;
+    &.reply_highlight {
+        background-color: #f4fcf0;
+    }
+}
+
+
+.breadcrumb {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: 0 0;
+    & >li {
+        display: inline-block;
+      list-style: none;
+      & >.divider {
+        padding: 0 5px;
+        color: #ccc;
+      }
+    }
+    & a {
+      color: var(--baseLightColor);
+    }
+    & >.active {
+        color: #999;
+    }
+}
+
+.user_big_avatar {
+  float: left;
+  margin-right: 10px;
+  & img {
+    width: 40px;
+    height: 40px;
+    border-radius: 3px;
+  }
+}
+
+.user_profile {
+  margin-top: 0;
+  clear: left;
+}
+
+ul.unstyled {
+  margin-left: 0;
+  list-style: none;
+}
+
+.big {
+  font-size: 14px;
+}
+
+.messages_count {
+  border-radius: 8px;
+    padding: 1px 5px;
+    background-color: var(--baseLightColor);
+    color: #fff;
+    margin-right: .5em;
+}
+
+.col_fade {
+    color: #ababab;
+}
+
+.pull-left {
+    float: left;
+}
+
+.user_avatar, .user_big_avatar {
+  & img {
+    width: 30px;
+      height: 30px;
+      border-radius: 3px;
+  }
+}
+
+.markdown-body {
+    box-sizing: border-box;
+    min-width: 200px;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+@media (max-width: 767px) {
+    .markdown-body {
+        padding: 15px;
+    }
+}
+
+.skeleton-Screen {
+    width: 100%;
+    height: 74px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    & .skeleton-Screen-img {
+        width: 22px;
+        height: 22px;
+        background-color: #ddd;
+        margin-right: 15px;
+    }
+    & .skeleton-Screen-content{
+        flex: 1;
+        padding: 12.5px 15px 12.5px 0;
+        & .skeleton-Screen-title{
+            width: 60%;
+            height: 18px;
+            background-color: #ddd;
+            margin-bottom: 4px;
+        }
+        & .skeleton-Screen-count{
+            width: 60px;
+            height: 14px;
+            background-color: #ddd;
+        }
+    }
+}
+
+.am-pull-to-refresh-indicator {
+    padding-top: 0 !important;
+}
+
+.hc-label {
+    display: inline-block;
+    padding: 0px 4px;
+    background-color: #e5e5e5;
+    color: #999;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+.heightLight-label {
+    color: #fff;
+    background-color: var(--baseLightColor);
+}
+
+.am-list-item .am-list-line .am-list-content {
+    font-size: 14px;
+}
+.am-list-extra {
+    font-size: 14px !important;
+    flex-basis: 20% !important;
+}
+.am-pull-to-refresh-indicator {
+    padding-top: 25px;
+}
+
+.BraftEditor-content {
+    min-height: 200px;
+    max-height: 1340px;
+}
+
+.am-list-item .am-list-line-wrap .am-list-extra {
+    white-space: nowrap;
+}
+
+.topics_btn {
+    float: right;
+    color: #fff !important;
+}
+
+.collect_btn {
+    background-color: var(--baseLightColor);
+    color: #fff !important;
+    margin-top: 10px;
+}
+
+.topic_full_title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 8px 0;
+    display: inline-block;
+    vertical-align: bottom;
+    width: 75%;
+    line-height: 130%;
+}
+
+.pull-right {
+    float: right;
+}
 
 .app {
   width: 100%;

@@ -11,6 +11,7 @@ function loginInfo(state = initState.loginInfo, action){
 		case ActionTypes.LOGIN:
 			return action.loginInfo;
 		case ActionTypes.LOGOUT:
+			sessionStorage.removeLoginInfo();
 			return { success: false, avatar_url: '', id: '', loginname: '', accessToken: '' }; 
 		default:
 			return state;
