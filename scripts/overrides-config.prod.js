@@ -1,6 +1,7 @@
 const paths = require('react-scripts/config/paths');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const baseConfig = require('./overrides-config.base.js')
+const autoprefixer = require('autoprefixer')
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
 const publicPath = paths.servedPath;
@@ -69,6 +70,12 @@ module.exports = function(config) {
                 }
             ), extractTextPluginOptions)
     });
+
+    // 按需加载antd-mobile组件
+    loaderList[1].options.plugins = [['import', {
+        'libraryName': 'antd-mobile'
+    }]]
+
     // Use Poststylus Plugin to handle stylus
 // config.plugins.push(baseConfig.loaderOptionsPlugin);
     // Define the root path alias

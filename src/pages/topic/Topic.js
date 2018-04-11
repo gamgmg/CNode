@@ -200,8 +200,7 @@ class Topic extends Component {
 						<div className="header topic_header">
 							<span className="topic_full_title">
 								{
-									top && 
-										( <span className="dc-header-label">置顶</span> )
+									top && ( <span className="dc-header-label">置顶</span> )
 								}
 								{ title }
 							</span>
@@ -213,10 +212,10 @@ class Topic extends Component {
 								<span>{ visit_count } 次浏览</span>
 								<span>来自 { this.fromTo(tab) }</span>
 								{
-									loginInfo.success && !this.state.isCollect && <Button className="collect_btn pull-right" inline size="small" onClick={this.collectTopic.bind(this)}>收藏</Button>
-								}
-								{
-									this.state.isCollect && <Button className="collect_btn pull-right" style={{backgroundColor: '#909090'}} inline size="small" onClick={this.deCollectTopic.bind(this)}>取消收藏</Button>
+									loginInfo.success && 
+										!this.state.isCollect 
+										? ( <Button className="collect_btn pull-right" inline size="small" onClick={this.collectTopic.bind(this)}>收藏</Button> )
+										: ( <Button className="collect_btn pull-right" style={{backgroundColor: '#909090'}} inline size="small" onClick={this.deCollectTopic.bind(this)}>取消收藏</Button> )
 								}
 							</div>
 							<div className="manage_topic">

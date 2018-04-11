@@ -33,35 +33,33 @@ class Header extends Component {
 		return (
 			<div>
 				<img src={logo} className="app-logo" alt="logo" />
-				{
-					loginInfo.success
-				  		? (
-					    	<div className="app-header_list">
-					      		<div>
-					        		<NavLink to="/home">首页</NavLink>
-					      		</div>
-					      
-					      		<div>
+				<div className="app-header_list">
+		      		<div>
+		        		<NavLink to="/home">首页</NavLink>
+		      		</div>
+		      		{
+		      			loginInfo.success
+		      				? (
+		      					<React.Fragment>
+		      						<div>
 					      			{  
 					      				this.state.messageCount.length > 0 &&
 					      					( <span className="big messages_count">{ this.state.messageCount }</span> )
 					      			}
 					      			<NavLink to="/my/messages">未读消息</NavLink>
-				      			</div> 
-					      		<div><a onClick={()=>initLoginInfo()}>退出</a></div>
-					    	</div>
-					  	)
-					  	: (
-					    	<div className="app-header_list">
-					      		<div>
-					        		<NavLink to="/home">首页</NavLink>
-					      		</div>
-					      		<div>
-					        		<NavLink to="/login">登陆</NavLink>
-					      		</div>
-					    	</div>
-					  	)
-				}
+					      			</div> 
+						      		<div><a onClick={()=>initLoginInfo()}>退出</a></div>
+		      					</React.Fragment>
+	      					)
+	      					: (
+								<React.Fragment>
+									<div>
+						        		<NavLink to="/login">登陆</NavLink>
+						      		</div>
+								</React.Fragment>
+	      					)
+		      		}
+		    	</div>
 			</div>
 		)
 	}
