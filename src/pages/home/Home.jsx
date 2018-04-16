@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { PullToRefresh, SegmentedControl, WingBlank, List, ListView } from 'antd-mobile'
-import BackToTop from '../../components/backToTop/BackToTop'
+import BackToTop from '@/commons/components/backToTop/BackToTop'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 import axios from 'axios'

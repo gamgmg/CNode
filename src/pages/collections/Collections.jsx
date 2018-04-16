@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
-import { WingBlank, WhiteSpace, List } from 'antd-mobile'
-import moment from 'moment'
-import 'moment/locale/zh-cn'
+import { WingBlank, WhiteSpace } from 'antd-mobile'
 import axios from 'axios'
 import getPath from '@/config/api'
-
-const Item = List.Item
+import Panel from '@/commons/components/panel/Panel'
 
 class Collections extends Component {
 	constructor(props){
@@ -23,20 +20,6 @@ class Collections extends Component {
 			.then(({data})=>{
 				this.setState({collectionsList: data.data})
 			})
-	}
-	getTab(tab, top, good){
-		let tabsList = {
-			ask: '问答',
-			share: '分享',
-			job: '招聘',
-			good: '精华',
-			dev: '测试'
-		}
-		return top 
-			? '置顶' 
-			: good
-				? '精华'
-				: tabsList[tab];
 	}
 	// 跳转页面
 	changePage(url){
@@ -64,31 +47,7 @@ class Collections extends Component {
 							</ul>
 						</div>
 					</div>
-					<div className="panel">
-						{
-							collectionsList &&
-								collectionsList.length !== 0 
-									? collectionsList.map((list, index)=>{
-										return (
-											<Item 
-												key={index}
-												extra={moment(list.last_reply_at).fromNow()} 
-												align="middle" 
-												thumb={list.author.avatar_url}
-												multipleLine
-												onClick={this.changePage(`/topic/${list.id}`)}
-											>
-										  		<span className={(list.top || list.good) ? 'hc-label heightLight-label' : 'hc-label'}>{this.getTab(list.tab, list.top, list.good)}</span>{list.title}
-											</Item>
-										)	
-									})
-									: (
-										<div className="inner">
-											<p>无话题</p>
-										</div>
-									)
-						}
-					</div>
+					<Panel title='收藏的话题' dataSource={collectionsList} changePage={this.changePage.bind(this)}/>
 					<WhiteSpace />
 				</div>
 			</WingBlank>					

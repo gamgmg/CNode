@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { initLoginInfo } from '../redux/actions';
-import Header from '../components/header/Header';
-
+import Header from '@/commons/components/header/Header';
 
 const mapStateToProps = (state) => ({
 	loginInfo: state.loginInfo

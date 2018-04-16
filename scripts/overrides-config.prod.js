@@ -53,7 +53,6 @@ module.exports = function(config) {
                                 require('postcss-flexbugs-fixes'),
                                 require('postcss-nested'),
                                 require('postcss-import'),
-                                require('postcss-cssnext')(),
                                 autoprefixer({
                                   browsers: [
                                     '>1%',

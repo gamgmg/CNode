@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 // import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
-import { Home, Topic, User, Login, Header, Collections, Messages, Release } from '../utils/loadable'
+import { Home, Topic, User, Login, Header, Collections, Messages, Release } from '@/utils/loadable'
 import { WingBlank } from 'antd-mobile'
 // import BackToTop from '../components/backToTop/BackToTop'
 import 'antd-mobile/dist/antd-mobile.css'
-import './App.css';
+import '@/commons/css/reset.css'
+import './App.css'
+import '@/commons/css/font-face.css'
 
 class App extends Component {
     // constructor(props){

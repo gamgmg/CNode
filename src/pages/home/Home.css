@@ -1,4 +1,6 @@
-@import '../../assets/css/common.css';
+:root {
+  --baseLightColor: #80bd01
+}
 
 .home {
 	& .fixedBall {
@@ -10,6 +12,7 @@
 	    z-index: 10;
 	    border-radius: 50%;
 	    border: 2px solid var(--baseLightColor);
+	    background-color: #fff;
 	    background-size: 100%;
 	}
 	& .home-content {

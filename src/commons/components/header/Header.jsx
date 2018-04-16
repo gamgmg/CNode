@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
-import { initLoginInfo } from '../../redux/actions'
-import logo from '../../assets/img/cnodejs_light.svg'
+import { initLoginInfo } from '@/redux/actions'
+import logo from '@/assets/img/cnodejs_light.svg'
 import axios from 'axios'
 import getPath from '@/config/api'
 

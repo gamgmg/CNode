@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { WingBlank, WhiteSpace, List } from 'antd-mobile'
+import { WingBlank, WhiteSpace } from 'antd-mobile'
 import axios from 'axios'
 import getPath from '@/config/api'
-const Item = List.Item
+import Panel from './components/panel/Panel'
 
 class Messages extends Component {
 	constructor(props){
@@ -23,7 +23,6 @@ class Messages extends Component {
 				}
 			})
 			.then(({data})=>{
-				console.log(data)
 				data.success && this.setState({hasReadMessages: data.data.has_read_messages, hasNotReadMessages: data.data.hasnot_read_messages})
 			})
 	}
@@ -61,26 +60,7 @@ class Messages extends Component {
 							</ul>
 						</div>
 					</div>
-					<div className="panel">
-						{
-							hasNotReadMessages &&
-								hasNotReadMessages.length !== 0 
-									? hasNotReadMessages.map((list, index)=>{
-										return (
-											<Item key={index} data-seed={index}>
-												<a onClick={this.changePage(`/user/${list.author.loginname}`)}>{ list.author.loginname }</a> 
-												<span> 回复了你的话题 </span> 
-												<a onClick={this.changePage(`/topic/${list.topic.id}`, list.id)}>{ list.topic.title }</a>
-											</Item>
-										)	
-									})
-									: (
-										<div className="inner">
-											<p>无消息</p>
-										</div>
-									)
-						}
-					</div>
+					<Panel dataSource={hasNotReadMessages} changePage={this.changePage.bind(this)}/>
 					<WhiteSpace />
 					<div className="panel">
 						<div className="header">
@@ -89,26 +69,7 @@ class Messages extends Component {
 							</ul>
 						</div>
 					</div>
-					<div className="panel">
-						{
-							hasReadMessages &&
-								hasReadMessages.length !== 0 
-									? hasReadMessages.map((list, index)=>{
-										return (
-											<Item key={index} data-seed={index}>
-												<a onClick={this.changePage(`/user/${list.author.loginname}`)}>{ list.author.loginname }</a> 
-												<span> 回复了你的话题 </span> 
-												<a onClick={this.changePage(`/topic/${list.topic.id}`)}>{ list.topic.title }</a>
-											</Item>
-										)	
-									})
-									: (
-										<div className="inner">
-											<p>无消息</p>
-										</div>
-									)
-						}
-					</div>
+					<Panel dataSource={hasReadMessages} changePage={this.changePage.bind(this)}/>
 					<WhiteSpace />
 				</div>
 			</WingBlank>					

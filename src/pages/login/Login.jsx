@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { WingBlank, WhiteSpace, InputItem, Button } from 'antd-mobile'
-import sessionStorage from '../../utils/storage'
+import sessionStorage from '@/utils/storage'
 import axios from 'axios'
 import getPath from '@/config/api'
 

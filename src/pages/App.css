@@ -1,6 +1,6 @@
-@import '../assets/css/reset.css';
-@import '../assets/css/common.css';
-@import '../assets/css/icomoon/font-face.css';
+:root {
+  --baseLightColor: #80bd01
+}
 
 .panel {
   & .header {
