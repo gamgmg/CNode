@@ -59,13 +59,12 @@ class Home extends Component {
 			.then(({data})=>{
 				if(data.success){
 					topicsList = topicsList.concat(data.data);
-					this.setState({
-						topicsList, 
-						dataSource: this.state.dataSource.cloneWithRows(topicsList),
-					},()=>{
+					this.setState(preState=>({
+						topicsList,
+						dataSource: preState.dataSource.cloneWithRows(topicsList),
+					}),()=>{
 						this.setState({loading: false, refreshing: false})
-					});
-
+					})
 				}
 			})
 			.catch((err)=>{
@@ -179,15 +178,18 @@ class Home extends Component {
 						refreshing={this.state.refreshing}
 						distanceToRefresh={100}
 						onRefresh={()=>{
-							this.setState({page: 1});
-							this.getData();
+							this.setState({page: 1},()=>{
+								this.getData();
+							});
 						}}
 					/>
 				}
 		        onEndReached={(event)=>{
-					let current = this.state.page;
-					this.setState({page: ++current});
-					this.getData();
+					this.setState(preState=>({
+						page: preState.page + 1
+					}),()=>{
+						this.getData();
+					})
 				}}
 			/>
 		)

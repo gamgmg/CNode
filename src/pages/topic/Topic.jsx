@@ -167,7 +167,7 @@ class Topic extends Component {
 						this.setState({upsStatus: 'down'});
 						break;
 					default:
-						this.state.topicData.replies[index].ups.push(this.props.loginInfo.id);
+						topicData.replies[index].ups.push(this.props.loginInfo.id);
 						this.setState({upsStatus: 'up'});
 						break;
 				}

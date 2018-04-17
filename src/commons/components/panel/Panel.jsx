@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { List } from 'antd-mobile'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 const Item = List.Item
 
-class Panel extends Component {
+class Panel extends PureComponent {
 	getTab(tab, top, good){
 		let tabsList = {
 			ask: '问答',

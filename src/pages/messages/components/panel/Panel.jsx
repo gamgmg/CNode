@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { List } from 'antd-mobile'
 const Item = List.Item
 
-class Panel extends Component {
+class Panel extends PureComponent {
 	render(){
 		return (
 			<div className="panel">
