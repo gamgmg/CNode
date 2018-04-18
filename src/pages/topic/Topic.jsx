@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { NavBar, Icon, WingBlank, WhiteSpace, List, Button, Toast } from 'antd-mobile'
 import SimpleMDE from 'react-simplemde-editor'
+import { CSSTransition } from "react-transition-group"
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 import axios from 'axios'
@@ -20,11 +21,15 @@ class Topic extends Component {
 			topThreeList: [],
 			isCollect: false,
 			content: '',
-			upsStatus: 'down'
+			upsStatus: 'down',
+			show: false,
 		}
 	}
-	componentDidMount(){
+	componentWillMount(){
 		this.getData();
+	}
+	componentDidMount(){
+		this.setState({show: true});
 		this.props.loginInfo.success && this.markAllMessage();	
 	}
 	getData(){
@@ -186,6 +191,7 @@ class Topic extends Component {
 		let { title, top, content, create_at, author, visit_count, tab, replies } = this.state.topicData; 
 		let { loginInfo } = this.props;
 		return (
+			<CSSTransition in={this.state.show} timeout={300} classNames="translate">
 			<div className="topic" ref="topic">
 				<WingBlank size="sm">
 					<NavBar
@@ -313,6 +319,7 @@ class Topic extends Component {
 						)
 				}
 			</div>
+			</CSSTransition>
 		)
 	}
 }
