@@ -6,12 +6,10 @@ import moment from 'moment'
 import 'moment/locale/zh-cn'
 import axios from 'axios'
 import getPath from '@/config/api'
+import sessionStorage from '@/utils/storage'
 import './Home.css'
 const Item = List.Item
 const Brief = Item.Brief
-
-// 主题列表数据
-let topicsList = []
 
 class Home extends Component {
 	constructor(props){
@@ -20,7 +18,7 @@ class Home extends Component {
 			rowHasChanged: (row1, row2) => row1 !== row2 
 		})
 		this.state = {
-			dataSource: dataSource.cloneWithRows(topicsList), //topicsList作为ListView的源数据
+			dataSource: dataSource.cloneWithRows([]), //ListView源数据
 			topicsList: [],
 			page: 1,
 			tab: null,
@@ -31,8 +29,23 @@ class Home extends Component {
 		}
 	}
 	componentWillMount(){
-		topicsList = [];
-		this.getData();
+		let tabList = {'all': 0, 'good': 1, 'share': 2, 'ask': 3, 'job': 4, 'dev': 5};
+		for(let tab in tabList){
+			if(sessionStorage.getTab('tab') === tab){
+				this.setState({
+					selectedIndex: tabList[tab]
+				})
+			}
+		}
+		let tab = sessionStorage.getTab('tab');
+		let tabData = sessionStorage.getTabData(tab || 'all');
+		if(tabData){
+			this.setState(preState=>({
+				dataSource: preState.dataSource.cloneWithRows(tabData)
+			}))
+		}else{
+			this.getData();
+		}
 	}
 	componentDidMount(){
 		let fixedBall = ReactDOM.findDOMNode(this.refs.fixedBall);
@@ -51,17 +64,18 @@ class Home extends Component {
 		axios
 			.get(getPath('topics'),{
 				params: {
-					page: this.state.page,
+					page: sessionStorage.getPage(`${this.state.tab || 'all'}Page`),
 					limit: 20,
-					tab: this.state.tab
+					tab: sessionStorage.getTab('tab'),
 				}
 			})
 			.then(({data})=>{
 				if(data.success){
-					topicsList = topicsList.concat(data.data);
+					let oldTabData = sessionStorage.getTabData(this.state.tab || 'all');
+					let newTabData = oldTabData ? oldTabData.concat(data.data) : data.data;
+					sessionStorage.setTabData(this.state.tab || 'all', JSON.stringify(newTabData));
 					this.setState(preState=>({
-						topicsList,
-						dataSource: preState.dataSource.cloneWithRows(topicsList),
+						dataSource: preState.dataSource.cloneWithRows(newTabData),
 					}),()=>{
 						this.setState({loading: false, refreshing: false})
 					})
@@ -95,12 +109,20 @@ class Home extends Component {
 				this.setState({tab: null});
 				break;
 		}
-		topicsList = [];
+			
 		this.setState({
 			selectedIndex: e.nativeEvent.selectedSegmentIndex,
-			page: 1
+			page: sessionStorage.getPage(`${this.state.tab || 'all'}Page`)
 		}, ()=>{
-			this.getData();
+			sessionStorage.setTab('tab', this.state.tab || 'all');
+			let tabData = sessionStorage.getTabData(this.state.tab || 'all');
+			if(tabData){
+				this.setState(preState=>({
+					dataSource: preState.dataSource.cloneWithRows(tabData)
+				}))
+			}else{
+				this.getData();
+			}
 		})
 	}
 	getTab(tab, top, good){
@@ -186,8 +208,9 @@ class Home extends Component {
 				}
 		        onEndReached={(event)=>{
 					this.setState(preState=>({
-						page: preState.page + 1
+						page: Number(sessionStorage.getPage(`${this.state.tab || 'all'}Page`)) + 1
 					}),()=>{
+						sessionStorage.setPage(`${this.state.tab || 'all'}Page`, this.state.page)
 						this.getData();
 					})
 				}}

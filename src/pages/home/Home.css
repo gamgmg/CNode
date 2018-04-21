@@ -18,4 +18,9 @@
 	& .home-content {
 		background-color: #fff;
 	}
+	& .home-segment {
+		& .am-segment {
+			min-height: 40px;
+		}
+	}
 }
