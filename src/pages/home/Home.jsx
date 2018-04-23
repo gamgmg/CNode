@@ -53,11 +53,11 @@ class Home extends Component {
             (fixedBall.style.backgroundImage = `url(${this.props.loginInfo.avatar_url})`);
 
         let content = document.querySelector('.am-list-view-scrollview');
-        content.addEventListener('scroll', this.handleScroll.bind(this));
+        content.addEventListener('scroll', this.throttle(this.handleScroll, 300))
 	}
 	componentWillUnmount(){
         let content = document.querySelector('.am-list-view-scrollview');
-        content.removeEventListener('scroll', this.handleScroll.bind(this));
+        content.removeEventListener('scroll', this.handleScroll);
     }
 	getData(){
 		this.setState({loading: true, refreshing: true});
@@ -147,13 +147,32 @@ class Home extends Component {
 			})
 		}
 	}
-	handleScroll(){
+	handleScroll = () => {
         let content = document.querySelector('.am-list-view-scrollview');
         if(content.scrollTop >= 200){
             this.setState({ showBackToTop: true })
         }else {
             this.setState({ showBackToTop: false })
         }
+    }
+    // 函数节流
+    throttle(func, wait){
+    	let timer, previous;
+    	return function(){
+    		const context = this;
+    		const args = arguments;
+    		const now = +new Date();
+    		if(previous && now < previous + wait){
+    			clearTimeout(timer);
+    			timer = setTimeout(()=>{
+    				previous = now;
+    				func.apply(context, args)
+    			}, wait)
+    		}else{
+    			previous = now;
+    			func.apply(context, args)
+    		}
+    	}
     }
 	backToTop(){
         let content = document.querySelector('.am-list-view-scrollview');
