@@ -11,7 +11,7 @@ class Collections extends Component {
 			collectionsList: []
 		}
 	}
-	componentWillMount(){
+	componentDidMount(){
 		this.getData();
 	}
 	getData(){

@@ -25,10 +25,8 @@ class Topic extends Component {
 			show: false,
 		}
 	}
-	componentWillMount(){
-		this.getData();
-	}
 	componentDidMount(){
+		this.getData();
 		this.setState({show: true});
 		this.props.loginInfo.success && this.markAllMessage();	
 	}

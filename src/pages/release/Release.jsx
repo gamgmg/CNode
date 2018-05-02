@@ -21,7 +21,7 @@ class Release extends Component {
 			content: '',
 		}
 	}
-	componentWillMount(){
+	componentDidMount(){
 		this.props.match.path.includes('edit') && this.getData();
 	}
 	getData(){

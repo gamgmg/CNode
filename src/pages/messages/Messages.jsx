@@ -12,7 +12,7 @@ class Messages extends Component {
 			hasNotReadMessages: []
 		}
 	}
-	componentWillMount(){
+	componentDidMount(){
 		this.getData();
 	}
 	getData(){

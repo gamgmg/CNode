@@ -28,7 +28,7 @@ class Home extends Component {
 			showBackToTop: false,
 		}
 	}
-	componentWillMount(){
+	componentDidMount(){
 		let tabList = {'all': 0, 'good': 1, 'share': 2, 'ask': 3, 'job': 4, 'dev': 5};
 		for(let tab in tabList){
 			if(sessionStorage.getTab('tab') === tab){
@@ -46,8 +46,7 @@ class Home extends Component {
 		}else{
 			this.getData();
 		}
-	}
-	componentDidMount(){
+
 		let fixedBall = ReactDOM.findDOMNode(this.refs.fixedBall);
         this.props.loginInfo.success &&
             (fixedBall.style.backgroundImage = `url(${this.props.loginInfo.avatar_url})`);
